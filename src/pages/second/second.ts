@@ -281,5 +281,7 @@ export class SecondPage {
     //       this.inputPhone.style.border = '1px solid red';
 		// 	console.log(message);
     // }
+
+    
 	}
 }
