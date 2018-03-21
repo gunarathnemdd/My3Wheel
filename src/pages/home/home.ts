@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { Platform, NavController } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { SecondPage } from '../second/second';
 import { AuthServicesProvider } from '../../providers/auth-services/auth-services';
 import { Geolocation } from '@ionic-native/geolocation';
+import { SplashScreen } from '@ionic-native/splash-screen';
 
 @Component({
 	selector: 'page-home',
@@ -33,7 +34,12 @@ export class HomePage {
 
 	public globalArray: any[] = [];
 
-	constructor(public http: HttpClient, public authService: AuthServicesProvider, public navCtrl: NavController, private geolocation: Geolocation) { }
+	constructor(
+		public splashScreen: SplashScreen,
+		public http: HttpClient, 
+		public authService: AuthServicesProvider, 
+		public navCtrl: NavController, 
+		private geolocation: Geolocation) { }
 
 
 	nextPage(driverName, vehicleNo, dr_distance, dr_time, drivId, drImage) {
@@ -50,6 +56,7 @@ export class HomePage {
 
 	ionViewDidLoad() {
 		console.log('ionViewDidLoad AuthServicesProvider');
+		this.splashScreen.hide();
 		this.geolocation.getCurrentPosition().then((position) => {
 			this.longitude = position['coords']['longitude'];
 			this.latitude = position['coords']['latitude'];
