@@ -231,7 +231,6 @@ export class SecondPage {
           let message = "Invalid name";
           this.valueName = document.getElementById ("inputPname");
           this.valueName.placeholder = message;
-          // this.valueName.placeholder.color = '#0b9711';
           this.inputName.style.border = '1px solid red';
     }
     else if(this.hire["controls"]["pasngr_phone"].hasError('required')){
