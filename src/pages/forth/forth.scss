@@ -1,0 +1,58 @@
+page-forth {
+
+.title{
+	text-align: left;
+	padding-top: 6px;
+}
+
+.topic{
+	font-size: 22px;
+	background: -webkit-linear-gradient(rgb(245, 223, 24), rgb(230, 20, 20));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.symbol{
+		text-align: right;
+	}
+
+
+.icon{
+		padding-right:15px;
+		width: 50px;
+		height:33px;
+	}
+
+p{
+	text-align: center;
+	color: red;
+}
+
+.font2{
+	color: blue;
+	line-height:25px;
+}
+
+section{
+	color: #2f39c5;
+	line-height:25px;
+}
+
+button{
+	background-color: rgb(13, 141, 13);
+	border-radius: 8px;
+}
+
+.font1{
+	color: #444f50;
+	line-height:25px;
+}
+
+.button:hover{
+	background-color: rgb(192, 181, 31);
+	color: rgb(48, 42, 42);
+}
+
+
+
+}

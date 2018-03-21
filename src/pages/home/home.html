@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-navbar color='navbarColor'>
+    <ion-row no-padding>
+      <ion-col>
+        <ion-title class="title" left>
+          <span class="topic">
+            <i> My3Wheel&nbsp; &nbsp; </i>
+          </span>
+        </ion-title>
+      </ion-col>
+
+      <ion-col col-auto>
+        <ion-item-group class="symbol">
+          <img class="icon" src="assets/imgs/rider.png" /> </ion-item-group>
+      </ion-col>
+    </ion-row>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid *ngFor="let item of globalArray; let i = index" no-padding>
+    <div *ngIf="item.name == 'null'">
+      <p class="nothingToDisplay">There are no three wheels nearby. Please try again in few minutes.</p>
+    </div>
+
+    <div *ngIf="i<10">
+
+    <div *ngIf="item.name != 'null'">
+      <ion-row class="availableDriverList" (click)="nextPage(item.name, item.vehicleNo, item.distance, item.time, item.drivrId , item.dImage);">
+        <ion-col col-auto>
+          <div class="imgContainer">
+            <img class="btn" src="assets/imgs/arrow1.png">
+            <div class="centered"> {{i+1}} </div>
+          </div>
+        </ion-col>
+
+        <ion-col col-auto>
+          <img class="user" src={{item.dImage}}/>
+        </ion-col>
+
+        <ion-col class="driver" col-auto>
+          <ion-row>
+            <span class="font_a"> Name</span>
+            <Span class="blackDot">:&nbsp;</Span>
+            <span class="font"> {{item.name}} </span>
+          </ion-row>
+          <ion-row>
+            <span class="font_b"> Plate No </span>
+            <Span class="blackDot">:&nbsp;</Span>
+            <span class="font"> {{item.vehicleNo}} </span>
+          </ion-row>
+          <ion-row>
+            <span class="font_c"> Distance </span>
+            <Span class="blackDot">:&nbsp;</Span>
+            <span class="font2"> {{item.distance}} </span>
+          </ion-row>
+          <ion-row>
+            <span class="font_d"> Time </span>
+            <Span class="blackDot">:&nbsp;</Span>
+            <span class="font2"> {{item.time}} </span>
+          </ion-row>
+        </ion-col>
+
+      </ion-row>
+    </div>
+    </div>
+  </ion-grid>
+
+</ion-content>

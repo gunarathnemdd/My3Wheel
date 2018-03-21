@@ -1,0 +1,153 @@
+<!--
+  Generated template for the SecondPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+	<ion-navbar color='navbarColor' hideBackButton>
+		<ion-buttons left>
+			<button ion-button navPop icon-only class="arrowButton">
+				<ion-icon ios="ios-arrow-back" md="md-arrow-back"></ion-icon>
+			</button>
+		</ion-buttons>
+
+		<ion-row>
+			<ion-col>
+				<ion-title class="title">
+					<span class="topic">
+						<i> My3Wheel &nbsp;</i>
+					</span>
+				</ion-title>
+			</ion-col>
+
+			<ion-col col-auto>
+				<ion-item-group class="symbol">
+					<img class="icon" src="assets/imgs/rider.png" />
+				</ion-item-group>
+			</ion-col>
+		</ion-row>
+	</ion-navbar>
+</ion-header>
+
+<ion-content>
+	<div class="body">
+		<ion-grid>
+			<ion-row>
+				<ion-col col-auto>
+					<img class="user" src={{driverImage}} />
+				</ion-col>
+
+				<ion-col class="driver" col-auto>
+					<ion-row>
+						<span class="font_a"> Name </span>
+						<Span class="blackDot">:&nbsp;</Span>
+						<span class="font"> {{driverName}} </span>
+					</ion-row>
+					<ion-row>
+						<span class="font_b"> Plate No </span>
+						<Span class="blackDot">:&nbsp;</Span>
+						<span class="font"> {{vehicleNo}} </span>
+					</ion-row>
+					<ion-row>
+						<span class="font_c"> Distance </span>
+						<Span class="blackDot">:&nbsp;</Span>
+						<span class="font2">{{distance}} </span>
+					</ion-row>
+					<ion-row>
+						<span class="font_d"> Time </span>
+						<Span class="blackDot">:&nbsp;</Span>
+						<span class="font2"> {{time}} </span>
+					</ion-row>
+				</ion-col>
+			</ion-row>
+		</ion-grid>
+	</div>
+
+	<form class="form list" [formGroup]="hire" (ngSubmit)="getHire()">
+		<ion-grid>
+			<br>
+			<label class="note">
+				<span class="blueNote">Please enter your hire details, then click SEND.</span>
+			</label>
+			<br>
+			<label class="note">
+				<span class="redNote">* All fields are essential.</span>
+			</label>
+			<br>
+
+			<ion-row>
+				<ion-col class="inputNames" col-auto>
+					<span class="input-label"> Name </span>
+				</ion-col>
+
+				<ion-col>
+					<input type="text" formControlName="pasngr_name" id="inputPname" class="inputFeilds" placeholder="Your Name">
+					<!-- <input type="text" formControlName="pasngr_name" id="inputPname" class="inputFeilds" placeholder="Your Name" (change)='onChangeTime("name", $event.target.value)'> -->
+				</ion-col>
+			</ion-row>
+
+			<ion-row>
+				<ion-col class="inputNames" col-auto>
+					<span class="input-label"> Phone Number </span>
+				</ion-col>
+
+				<ion-col>
+					<!-- <input type="number" formControlName="pasngr_phone" id="inputPphone" class="inputFeilds" placeholder="Phone Number"> -->
+					<input type="number" formControlName="pasngr_phone" id="inputPphone" class="inputFeilds" placeholder="Phone Number" (change)='onChangeTime("phoneNumber", $event.target.value)'>
+
+				</ion-col>
+			</ion-row>
+
+			<ion-row>
+				<ion-col class="inputNames" col-auto>
+					<span class="input-label"> Pickup Location </span>
+				</ion-col>
+
+				<ion-col>
+					<input type="text" formControlName="pickup_location" id="inputPLocation" class="inputFeilds" placeholder="Pickup Location">
+				</ion-col>
+			</ion-row>
+
+			<ion-row>
+				<ion-col class="inputNames" col-auto>
+					<span class="input-label"> Destination </span>
+				</ion-col>
+
+				<ion-col>
+					<input type="text" formControlName="destination" id="inputPdestination"class="inputFeilds" placeholder="Destination">
+				</ion-col>
+			</ion-row>
+
+			<ion-row>
+				<ion-col class="inputNames" col-auto>
+					<span class="input-label"> Date </span>
+				</ion-col>
+
+				<ion-col center>
+					<ion-datetime [min]="minDate" max="2020-12-31" pickerFormat="YYYY/MM/DD" id="inputPdate" displayFormat="YYYY/MM/DD" formControlName="pickup_date" class="inputDate" placeholder="yyyy/mm/dd" > </ion-datetime>
+				</ion-col>
+			</ion-row>
+
+			<ion-row>
+				<ion-col class="inputNames" col-auto>
+					<span class="input-label"> Time </span>
+				</ion-col>
+
+				<ion-col center>
+					<ion-datetime formControlName="pickup_time" id="inputPtime" displayFormat="hh:mm a" pickerFormat="hh:mm a" class="inputTime" placeholder="hh:mm"> </ion-datetime>
+				</ion-col>
+			</ion-row>
+
+			<ion-row style="text-align: center">
+				<ion-col col-3 push-3>
+					<button ion-button navPop class="btnBack"> Back </button>
+				</ion-col>  
+				<ion-col col-3 push-3>
+					<button ion-button type="submit" class="btnSend">Send</button>
+				</ion-col> 
+			</ion-row>
+		</ion-grid>
+	</form>
+
+</ion-content>

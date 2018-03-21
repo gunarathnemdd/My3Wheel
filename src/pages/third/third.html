@@ -1,0 +1,65 @@
+<!--
+  Generated template for the ThirdPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+	<ion-navbar color='navbarColor' hideBackButton>
+	      <ion-row>
+	        <ion-col>
+	          <ion-title class="title" left>
+								<span class="topic"> <i> My3Wheel&nbsp; &nbsp; </i> </span>
+	          </ion-title>
+	        </ion-col>
+
+	        <ion-col col-auto >
+	          <ion-item-group class="symbol">
+	          <img class="icon" src="assets/imgs/rider.png" /> </ion-item-group>
+	        </ion-col>
+	      </ion-row>
+	   </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+	<section>
+		Your 3wheel driver has accepted your hire. He will come on time you have given.
+	</section>
+
+	<p>Your Hire Details:</p>
+	<ion-grid>
+		<ion-row>
+			<ion-col class="font1" col-auto>
+				<ion-row> Driver Name: </ion-row>
+				<ion-row> Plate Number: </ion-row>
+				<ion-row> From : </ion-row>
+				<ion-row> To : </ion-row>
+				<ion-row> Date : </ion-row>
+				<ion-row> Time : </ion-row>
+				<ion-row> Amount : </ion-row>
+			</ion-col>
+
+			<ion-col class="font2" >
+				<ion-row> <span> {{dri_name}} </span></ion-row>
+				<ion-row> <span> {{vehicle_nu}} </span></ion-row>
+				<ion-row> {{pickup_location}} </ion-row>
+				<ion-row> {{destination}} </ion-row>	
+				<ion-row> {{pickup_date}} </ion-row>   
+				<ion-row> {{pickup_time}} </ion-row>
+				<ion-row class="redNote">Rs : {{hireFee}} </ion-row>
+			</ion-col>	
+		</ion-row>
+
+		<ion-row>
+			<ion-col class="acceptBtnAlign">
+				<button ion-button class="btnAccept" (click)="exitApp();"> Accept </button>
+			</ion-col>
+
+			<ion-col class="rejectBtnAlign">
+				<button ion-button class="btnReject" (click)="goHome();"> Reject </button>
+			</ion-col>
+		</ion-row> <br>
+		<p id="exitNote" class="redNote"></p>
+	</ion-grid>
+
+</ion-content>

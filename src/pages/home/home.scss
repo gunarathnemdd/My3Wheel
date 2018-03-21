@@ -1,0 +1,138 @@
+page-home {
+
+	.icon{
+		padding-top: 4px;
+		padding-right:15px;
+		width: 47px;
+		height:32px;
+	}
+
+	.availableDriverList{
+		margin: 0%;
+		padding: 0%; 
+		border: 1px solid black; 
+	}
+
+	.title{
+		text-align: left;
+		padding-top: 6px;	
+	}
+
+	.topic{
+		text-align: left;
+		font-size: 23px;
+		background: -webkit-linear-gradient(rgb(245, 223, 24), rgb(230, 20, 20));
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	.symbol{
+		text-align: right;
+	}
+
+	.user{
+		margin-top: 5px;
+		border:1px solid black;
+		width: 65px;
+		height: 73px;	
+	}
+
+	ion-grid{
+		background-color: #fcfcfc ;
+	}
+
+	ion-content{
+		border: 1px solid black;
+	}
+
+	.nothingToDisplay{
+		padding: 5px;
+		margin-left: 10px;
+	}
+
+	hr{
+		display:block;
+		border-style: inset;
+		border-color:black;
+	}
+
+	.font{
+	color: blue;
+	}
+
+	.font2{
+	color: red;
+	}
+
+	.btn{
+	// position: absolute; 
+	// z-index: -1;
+	margin-top: 3px;
+	width: 65px;
+	height: 77px;
+	margin-bottom: 0%;	
+	padding-bottom: 0%;
+	}
+
+	button{
+		position: absolute;
+		width: 65px;
+		height: 100px;
+		margin-bottom: 0%;
+		padding-bottom: 0%;
+	}
+
+	.driver{
+	margin-top: 3px;
+	margin-left: 4px;
+	line-height: 20px;
+	}
+
+	.blackDot{
+		color: black;
+	}
+
+	.font_a{
+		// color: #072b0b;
+		color:black;
+		width: 57px;
+	}
+
+	.font_b{
+		// color: #1e7629;
+		color:black;
+		width: 57px;
+	}
+
+	.font_c{
+		// color: #0b9711;
+		color:black;
+		width: 57px;
+	}
+
+	.font_d{
+		// color:#166770;
+		color:black;
+		width: 57px;
+	}
+
+	.imgContainer{
+		position: relative;
+		text-align: center;
+		color:black;
+	}
+
+	.centered {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		color: black ;
+		font-weight:bold;
+		font-size:25px;
+	}
+	
+
+}
+
+
