@@ -76,14 +76,13 @@
 			</label>
 			<br>
 
-			<ion-row>
+			<ion-row>  
 				<ion-col class="inputNames" col-auto>
 					<span class="input-label"> Name </span>
 				</ion-col>
 
 				<ion-col>
-					<input type="text" formControlName="pasngr_name" id="inputPname" class="inputFeilds" placeholder="Your Name">
-					<!-- <input type="text" formControlName="pasngr_name" id="inputPname" class="inputFeilds" placeholder="Your Name" (change)='onChangeTime("name", $event.target.value)'> -->
+					<input type="text" formControlName="pasngr_name" id="inputPname" class="inputFeilds" placeholder="Your Name" (change)='onClickNextField("name", $event.target.value)'>  
 				</ion-col>
 			</ion-row>
 
@@ -93,11 +92,9 @@
 				</ion-col>
 
 				<ion-col>
-					<!-- <input type="number" formControlName="pasngr_phone" id="inputPphone" class="inputFeilds" placeholder="Phone Number"> -->
-					<input type="number" formControlName="pasngr_phone" id="inputPphone" class="inputFeilds" placeholder="Phone Number" (change)='onChangeTime("phoneNumber", $event.target.value)'>
-
+					<input type="number" formControlName="pasngr_phone" id="inputPphone" class="inputFeilds" placeholder="Phone Number" (change)='onClickNextField("phoneNumber", $event.target.value)'>
 				</ion-col>
-			</ion-row>
+			</ion-row>  
 
 			<ion-row>
 				<ion-col class="inputNames" col-auto>
@@ -105,7 +102,7 @@
 				</ion-col>
 
 				<ion-col>
-					<input type="text" formControlName="pickup_location" id="inputPLocation" class="inputFeilds" placeholder="Pickup Location">
+					<input type="text" formControlName="pickup_location" id="inputPLocation" class="inputFeilds" placeholder="Pickup Location" (change)='onClickNextField("pickLocation", $event.target.value)'>
 				</ion-col>
 			</ion-row>
 
@@ -115,7 +112,7 @@
 				</ion-col>
 
 				<ion-col>
-					<input type="text" formControlName="destination" id="inputPdestination"class="inputFeilds" placeholder="Destination">
+					<input type="text" formControlName="destination" id="inputPdestination"class="inputFeilds" placeholder="Destination" (change)='onClickNextField("destination", $event.target.value)'>
 				</ion-col>
 			</ion-row>
 
@@ -125,7 +122,7 @@
 				</ion-col>
 
 				<ion-col center>
-					<ion-datetime [min]="minDate" max="2020-12-31" pickerFormat="YYYY/MM/DD" id="inputPdate" displayFormat="YYYY/MM/DD" formControlName="pickup_date" class="inputDate" placeholder="yyyy/mm/dd" > </ion-datetime>
+					<ion-datetime [min]="minDate" max="2020-12-31" pickerFormat="YYYY/MM/DD" id="inputPdate" displayFormat="YYYY/MM/DD" formControlName="pickup_date" class="inputDate" placeholder="yyyy/mm/dd" (ngModelChange)='onClickNextField2()'> </ion-datetime>
 				</ion-col>
 			</ion-row>
 
@@ -135,7 +132,7 @@
 				</ion-col>
 
 				<ion-col center>
-					<ion-datetime formControlName="pickup_time" id="inputPtime" displayFormat="hh:mm a" pickerFormat="hh:mm a" class="inputTime" placeholder="hh:mm"> </ion-datetime>
+					<ion-datetime formControlName="pickup_time" id="inputPtime" displayFormat="hh:mm a" pickerFormat="hh:mm a" class="inputTime" placeholder="hh:mm" (ngModelChange)='onClickNextField3()'> </ion-datetime>
 				</ion-col>
 			</ion-row>
 

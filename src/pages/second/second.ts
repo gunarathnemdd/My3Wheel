@@ -26,7 +26,7 @@ export class SecondPage {
   public minTime: any;
   public maxDate : any;
 
-	public pasngr_name: string;
+	public pasngr_name: any;
 	public pasngr_phone: any;
 	public pickup_location: string;
   public destination : string;
@@ -158,13 +158,29 @@ export class SecondPage {
     alert.present();
   }
 
-  onChangeTime(type, data) {
+  onClickNextField(type, data) {
     if(type == "name"){
-      console.log(". Event data: " + data);  
+      this.getHire(); 
+      // this.pasngr_name.reset(); 
     }
     else if (type == "phoneNumber"){
-      console.log(". Event data: " + data); 
-    }        
+      this.getHire(); 
+      this.pasngr_phone.reset()
+    } 
+    else if (type == "pickLocation"){
+      this.getHire(); 
+    }   
+    else if (type == "destination"){
+      this.getHire(); 
+    }         
+  }
+
+  onClickNextField2() {
+    this.getHire(); 
+  }
+
+  onClickNextField3() {
+    this.getHire(); 
   }
 
   getHire() {
@@ -190,9 +206,8 @@ export class SecondPage {
        this.nxtpge(this.driverName, this.vehicleNo , this.driverId);  
        this.showAlert();
     });
-
 		}
-		else if(this.hire["controls"]["pasngr_name"].hasError('pattern')) {
+		else if(this.hire["controls"]["pasngr_name"].hasError('pattern')) {  
 			let title = "Sorry!";
           let message = "Invalid Name";
           this.valueName = document.getElementById ("inputPname");
@@ -224,8 +239,6 @@ export class SecondPage {
           this.inputDestination.style.border = '1px solid red';
 			console.log(message);
     }
-
-
     else if(this.hire["controls"]["pasngr_name"].hasError('required')){
       let title = "Sorry!";
           let message = "Invalid name";
@@ -282,6 +295,6 @@ export class SecondPage {
 		// 	console.log(message);
     // }
 
-    
+
 	}
 }
