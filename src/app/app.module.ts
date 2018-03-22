@@ -11,7 +11,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { ThirdPage } from '../pages/third/third';
 import { ForthPage } from '../pages/forth/forth';
 import { Geolocation } from '@ionic-native/geolocation';
-
+import { LocationAccuracy } from '@ionic-native/location-accuracy';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -45,7 +45,8 @@ import { HomePage } from '../pages/home/home';
     SplashScreen,
     Geolocation,
     AuthServicesProvider,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    LocationAccuracy
   ]
 })
 export class AppModule {}
