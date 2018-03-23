@@ -11,6 +11,7 @@ page-second {
 		margin-left: none;
 		font-size: 22px;
 		background: -webkit-linear-gradient(rgb(245, 223, 24), rgb(230, 20, 20));
+		background-clip: text;
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 	}
@@ -44,34 +45,35 @@ page-second {
 		background-color: #f8e7c2;
 	}
 
+	.input-label{
+		margin: 7px 8px 5px 0;
+	}
+
 	.inputFeilds{
 		width: 150px;
 		border: 1px solid rgb(190, 189, 189);
-		height: 21px;
 		padding-left: 5px;
 		font-size: 14px;
+		background-color: white;
 	}
 
-	.inputTime{
+	.text-input-md{
+		margin: 4px;
+	}
+
+	.inputDateTime{
 		width: 150px;
 		padding-left: 5px;
 		background-color: white;
 		border: 1px solid rgb(190, 189, 189);
-		height: 21px;
 		padding-top : 3px;    
 		margin: 0%;
 		font-size: 14px;
+		height: 25px;
 	}
 
-	.inputDate{
-		width: 150px;  
-		padding-left: 5px;
-		background-color: white;
-		border: 1px solid rgb(190, 189, 189);
-		height: 21px;
-		padding-top: 1px;
-		margin: 0%;
-		font-size: 14px;
+	.datetime-text{
+		margin: 0 4px 4px 4px;
 	}
 
 	::placeholder{
