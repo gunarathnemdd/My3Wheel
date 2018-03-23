@@ -75,24 +75,24 @@
 				<span class="redNote">* All fields are essential.</span>
 			</label>
 			<br>
-			<div>
-				<ion-row>
-					<ion-col class="inputNames" col-auto>
-						<ion-label class="input-label" fixed> Name </ion-label>
-					</ion-col>
+			<ion-row>
+				<ion-col class="inputNames" col-auto>
+					<ion-label class="input-label" fixed> Name </ion-label>
+				</ion-col>
 
-					<ion-col>
-						<ion-input type="text" formControlName="pasngr_name" id="inputPname" class="inputFeilds" placeholder="Your Name" (change)='onClickNextField("name", $event.target.value)'></ion-input>
-					</ion-col>
-				</ion-row>
-			</div>
+				<ion-col>
+					<ion-input type="text" formControlName="pasngr_name" id="inputPname" class="inputFeilds" [placeholder]="namePlaceholder"
+					 (change)='onClickNextField("name", $event.target.value)'></ion-input>
+				</ion-col>
+			</ion-row>
 			<ion-row>
 				<ion-col class="inputNames" col-auto>
 					<ion-label class="input-label" fixed> Phone Number </ion-label>
 				</ion-col>
 
 				<ion-col>
-					<ion-input type="number" formControlName="pasngr_phone" id="inputPphone" class="inputFeilds" placeholder="Phone Number" (change)='onClickNextField("phoneNumber", $event.target.value)'></ion-input>
+					<ion-input type="number" formControlName="pasngr_phone" id="inputPphone" class="inputFeilds" [placeholder]="phoneNumberPlaceholder"
+					 (change)='onClickNextField("phoneNumber", $event.target.value)'></ion-input>
 				</ion-col>
 			</ion-row>
 
@@ -102,7 +102,7 @@
 				</ion-col>
 
 				<ion-col>
-					<ion-input type="text" formControlName="pickup_location" id="inputPLocation" class="inputFeilds" placeholder="Pickup Location"
+					<ion-input type="text" formControlName="pickup_location" id="inputPLocation" class="inputFeilds" [placeholder]="pickupLocationPlaceholder"
 					 (change)='onClickNextField("pickLocation", $event.target.value)'></ion-input>
 				</ion-col>
 			</ion-row>
@@ -113,7 +113,7 @@
 				</ion-col>
 
 				<ion-col>
-					<ion-input type="text" formControlName="destination" id="inputPdestination" class="inputFeilds" placeholder="Destination"
+					<ion-input type="text" formControlName="destination" id="inputPdestination" class="inputFeilds" [placeholder]="destinationPlaceholder"
 					 (change)='onClickNextField("destination", $event.target.value)'></ion-input>
 				</ion-col>
 			</ion-row>
@@ -125,7 +125,7 @@
 
 				<ion-col center>
 					<ion-datetime [min]="minDate" max="2020-12-31" pickerFormat="YYYY/MM/DD" id="inputPdate" displayFormat="YYYY/MM/DD" formControlName="pickup_date"
-					 class="inputDateTime" placeholder="yyyy/mm/dd" (ngModelChange)='onClickNextField2()'> </ion-datetime>
+					 class="inputDateTime" [placeholder]="datePlaceholder" (ngModelChange)='onClickNextField2()'> </ion-datetime>
 				</ion-col>
 			</ion-row>
 
@@ -136,7 +136,7 @@
 
 				<ion-col center>
 					<ion-datetime formControlName="pickup_time" id="inputPtime" displayFormat="hh:mm a" pickerFormat="hh:mm a" class="inputDateTime"
-					 placeholder="hh:mm" (ngModelChange)='onClickNextField3()'> </ion-datetime>
+					 [placeholder]="timePlaceholder" (ngModelChange)='onClickNextField3()'> </ion-datetime>
 				</ion-col>
 			</ion-row>
 
