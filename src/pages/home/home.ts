@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Platform, NavController } from 'ionic-angular';
+import { Platform, NavController, LoadingController } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { SecondPage } from '../second/second';
 import { AuthServicesProvider } from '../../providers/auth-services/auth-services';
@@ -29,17 +29,24 @@ export class HomePage {
 	public latitude: any;
 	public dImage: any;
 	public driverImage: any;
+	public loading: any;
 
 	host = 'https://greenic.000webhostapp.com/php/my3Wheel';
 
 	public globalArray: any[] = [];
 
 	constructor(
+		public loadingCtrl: LoadingController,
 		public splashScreen: SplashScreen,
 		public http: HttpClient,
 		public authService: AuthServicesProvider,
 		public navCtrl: NavController,
-		private geolocation: Geolocation) { }
+		private geolocation: Geolocation, ) {
+		this.loading = this.loadingCtrl.create({
+			content: 'Please wait...'
+		});
+		this.loading.present();
+	}
 
 	doRefresh(refresher) {
 		this.getDriverList();
@@ -60,7 +67,7 @@ export class HomePage {
 		})
 	}
 
-	ionViewDidLoad() {
+	ionViewDidLoad() {	
 		console.log('ionViewDidLoad AuthServicesProvider');
 		this.splashScreen.hide();
 		this.getDriverList();
@@ -73,6 +80,7 @@ export class HomePage {
 			this.globalArray = [];
 			this.http.get(this.host + '/my3Wheel_getDriverDistance.php?longitude=' + this.longitude + '&latitude=' + this.latitude).subscribe(location => {
 				console.log(location);
+				this.loading.dismiss();
 				if (location != "No results") {
 					console.log(Object.keys(location).length);
 					for (let i = 0; i < Object.keys(location).length; i++) {
