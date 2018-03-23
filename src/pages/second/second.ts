@@ -165,7 +165,7 @@ export class SecondPage {
     }
     else if (type == "phoneNumber"){
       this.getHire(); 
-      this.pasngr_phone.reset()
+      // this.pasngr_phone.reset()
     } 
     else if (type == "pickLocation"){
       this.getHire(); 
