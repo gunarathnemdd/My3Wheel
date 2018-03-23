@@ -36,11 +36,17 @@ export class HomePage {
 
 	constructor(
 		public splashScreen: SplashScreen,
-		public http: HttpClient, 
-		public authService: AuthServicesProvider, 
-		public navCtrl: NavController, 
+		public http: HttpClient,
+		public authService: AuthServicesProvider,
+		public navCtrl: NavController,
 		private geolocation: Geolocation) { }
 
+	doRefresh(refresher) {
+		this.getDriverList();
+		setTimeout(() => {
+			refresher.complete();
+		}, 2000);
+	}
 
 	nextPage(driverName, vehicleNo, dr_distance, dr_time, drivId, drImage) {
 		console.log(drivId);
@@ -57,10 +63,14 @@ export class HomePage {
 	ionViewDidLoad() {
 		console.log('ionViewDidLoad AuthServicesProvider');
 		this.splashScreen.hide();
-		this.geolocation.getCurrentPosition().then((position) => {
+		this.getDriverList();
+	}
+
+	getDriverList() {
+		this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((position) => {
 			this.longitude = position['coords']['longitude'];
 			this.latitude = position['coords']['latitude'];
-
+			this.globalArray = [];
 			this.http.get(this.host + '/my3Wheel_getDriverDistance.php?longitude=' + this.longitude + '&latitude=' + this.latitude).subscribe(location => {
 				console.log(location);
 				if (location != "No results") {
@@ -76,5 +86,5 @@ export class HomePage {
 				}
 			});
 		});
-		}
+	}
 }
