@@ -38,7 +38,7 @@ export class HomePage {
 		public splashScreen: SplashScreen,
 		public http: HttpClient, 
 		public authService: AuthServicesProvider, 
-		public navCtrl: NavController,
+		public navCtrl: NavController, 
 		private geolocation: Geolocation) { }
 
 
@@ -57,7 +57,7 @@ export class HomePage {
 	ionViewDidLoad() {
 		console.log('ionViewDidLoad AuthServicesProvider');
 		this.splashScreen.hide();
-		this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((position) => {
+		this.geolocation.getCurrentPosition().then((position) => {
 			this.longitude = position['coords']['longitude'];
 			this.latitude = position['coords']['latitude'];
 
