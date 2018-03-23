@@ -50,7 +50,6 @@ page-second {
 	}
 
 	.inputFeilds{
-		width: 150px;
 		border: 1px solid rgb(190, 189, 189);
 		padding-left: 5px;
 		font-size: 14px;
@@ -62,7 +61,6 @@ page-second {
 	}
 
 	.inputDateTime{
-		width: 150px;
 		padding-left: 5px;
 		background-color: white;
 		border: 1px solid rgb(190, 189, 189);
@@ -73,7 +71,7 @@ page-second {
 	}
 
 	.datetime-text{
-		margin: 0 4px 4px 4px;
+		margin: 2px 4px 4px 4px;
 	}
 
 	::placeholder{
