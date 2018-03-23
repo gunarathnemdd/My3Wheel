@@ -161,11 +161,9 @@ export class SecondPage {
   onClickNextField(type, data) {
     if(type == "name"){
       this.getHire(); 
-      // this.pasngr_name.reset(); 
     }
     else if (type == "phoneNumber"){
-      this.getHire(); 
-      this.pasngr_phone.reset()
+      this.getHire();
     } 
     else if (type == "pickLocation"){
       this.getHire(); 

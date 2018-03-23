@@ -21,15 +21,15 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
-      this.locationAccuracy.canRequest().then((canRequest: boolean) => {
-        if(canRequest) {
-          // the accuracy option will be ignored by iOS
-          this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
-            () => console.log('Request successful'),
-            error => console.log('Error requesting location permissions', error)
-          );
-        }
-      });
+      // this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+      //   if(canRequest) {
+      //     // the accuracy option will be ignored by iOS
+      //     this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+      //       () => console.log('Request successful'),
+      //       error => console.log('Error requesting location permissions', error)
+      //     );
+      //   }
+      // });
     });
   }
 }
