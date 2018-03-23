@@ -91,7 +91,7 @@
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
     </plugin>
-    <plugin name="cordova-plugin-request-location-accuracy" spec="^2.2.2" />
+    <plugin name="cordova.custom.plugins.exitapp" spec="~1.0.0" />
     <engine name="android" spec="7.0.0" />
     <engine name="browser" spec="5.0.3" />
     <engine name="ios" spec="4.5.4" />
