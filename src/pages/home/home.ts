@@ -41,12 +41,7 @@ export class HomePage {
 		public http: HttpClient,
 		public authService: AuthServicesProvider,
 		public navCtrl: NavController,
-		private geolocation: Geolocation, ) {
-		this.loading = this.loadingCtrl.create({
-			content: 'Please wait...'
-		});
-		this.loading.present();
-	}
+		private geolocation: Geolocation ) { }
 
 	doRefresh(refresher) {
 		this.getDriverList();
@@ -74,10 +69,14 @@ export class HomePage {
 	}
 
 	getDriverList() {
+		this.loading = this.loadingCtrl.create({
+			content: 'Please wait...'
+		});
+		this.loading.present();
+		this.globalArray = [];
 		this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((position) => {
 			this.longitude = position['coords']['longitude'];
 			this.latitude = position['coords']['latitude'];
-			this.globalArray = [];
 			this.http.get(this.host + '/my3Wheel_getDriverDistance.php?longitude=' + this.longitude + '&latitude=' + this.latitude).subscribe(location => {
 				console.log(location);
 				this.loading.dismiss();
