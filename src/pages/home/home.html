@@ -18,19 +18,26 @@
 </ion-header>
 
 <ion-content>
-  <ion-refresher (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="none">
+  <ion-refresher (ionRefresh)="doRefresh($event)" [enabled]="refresherEnabled">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown" 
+      pullingText="Pull to refresh" 
+      refreshingSpinner="none">
     </ion-refresher-content>
   </ion-refresher>
 
   <ion-grid *ngFor="let item of globalArray; let i = index" no-padding>
+    <div *ngIf="item.name == 'loading'">
+      <p class="nothingToDisplay">Thank you for using My3Wheel app. We have configured this app to compatible with your device. Please restart and enjoy the app.</p>
+    </div>
+
     <div *ngIf="item.name == 'null'">
       <p class="nothingToDisplay">There are no three wheels nearby. Please try again in few minutes.</p>
     </div>
 
     <div *ngIf="i<10">
 
-      <div *ngIf="item.name != 'null'">
+      <div *ngIf="(item.name != 'null') && (item.name != 'loading')">
         <ion-row class="availableDriverList" (click)="nextPage(item.name, item.vehicleNo, item.distance, item.time, item.drivrId , item.dImage);">
           <ion-col col-auto>
             <div class="imgContainer">

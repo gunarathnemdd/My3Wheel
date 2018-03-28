@@ -5,6 +5,7 @@ import { SecondPage } from '../second/second';
 import { AuthServicesProvider } from '../../providers/auth-services/auth-services';
 import { Geolocation } from '@ionic-native/geolocation';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { Storage } from '@ionic/storage';
 
 @Component({
 	selector: 'page-home',
@@ -30,18 +31,22 @@ export class HomePage {
 	public dImage: any;
 	public driverImage: any;
 	public loading: any;
+	public refresherEnabled: any;
 
 	host = 'https://greenic.000webhostapp.com/php/my3Wheel';
 
 	public globalArray: any[] = [];
 
 	constructor(
+		private storage: Storage,
 		public loadingCtrl: LoadingController,
 		public splashScreen: SplashScreen,
 		public http: HttpClient,
 		public authService: AuthServicesProvider,
 		public navCtrl: NavController,
-		private geolocation: Geolocation ) { }
+		private geolocation: Geolocation) {
+
+	}
 
 	doRefresh(refresher) {
 		this.getDriverList();
@@ -62,24 +67,36 @@ export class HomePage {
 		})
 	}
 
-	ionViewDidLoad() {	
-		console.log('ionViewDidLoad AuthServicesProvider');
+	ionViewDidLoad() {
+		console.log('ionViewDidLoad HomePage');
 		this.splashScreen.hide();
-		this.getDriverList();
+		this.storage.get('isLoaded').then((val) => {
+			if (val == "loaded") {
+				this.getDriverList();
+				this.refresherEnabled = true;
+				console.log("loaded");
+			}
+			else {
+				this.storage.set('isLoaded', "loaded");
+				this.globalArray.push({ name: "loading" });
+				this.refresherEnabled = false;
+				console.log("not loaded");
+			}
+		});
 	}
 
 	getDriverList() {
-		this.loading = this.loadingCtrl.create({
-			content: 'Please wait...'
-		});
-		this.loading.present();
+		// this.loading = this.loadingCtrl.create({
+		// 	content: 'Please wait...'
+		// });
+		// this.loading.present();
 		this.globalArray = [];
 		this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((position) => {
 			this.longitude = position['coords']['longitude'];
 			this.latitude = position['coords']['latitude'];
 			this.http.get(this.host + '/my3Wheel_getDriverDistance.php?longitude=' + this.longitude + '&latitude=' + this.latitude).subscribe(location => {
 				console.log(location);
-				this.loading.dismiss();
+				//this.loading.dismiss();
 				if (location != "No results") {
 					console.log(Object.keys(location).length);
 					for (let i = 0; i < Object.keys(location).length; i++) {
