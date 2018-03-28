@@ -29,6 +29,7 @@ export class ThirdPage {
   public driverId : any;
   public passenger_Id : any;
   public rider_Confirm : any;
+  public hireNo : any;
  
   host = 'https://greenic.000webhostapp.com';
 
@@ -36,7 +37,8 @@ export class ThirdPage {
 
     this.platform = platform;
 
-    this.navParams = navParams
+    this.navParams = navParams;
+    this.hireNo = navParams.get('hireNo');
     this.dri_name = this.navParams.get('driName');
     this.vehicle_nu = this.navParams.get('vehiNum');
     this.pickup_location = navParams.get('pickup');
@@ -49,7 +51,7 @@ export class ThirdPage {
   }
 
   goHome(){
-    this.http.get(this.host + '/my3Wheel_riderReject.php?passengerId=' + this.passenger_Id + '&driverId=' + this.driverId ).subscribe(data => {
+    this.http.get(this.host + '/my3Wheel_riderReject.php?hireNo=' + this.hireNo).subscribe(data => {
       console.log(data); 
     const root = this.app.getRootNav();
     root.popToRoot();
@@ -59,21 +61,14 @@ export class ThirdPage {
   exitApp(){
     this.rider_Confirm = 'yes';
     console.log(this.hireFee);
-    this.http.get(this.host + '/my3Wheel_riderConfirm.php?passengerId=' + this.passenger_Id + '&driverId=' + this.driverId + '&wheelFee=' + this.hireFee).subscribe(data => {
+    this.http.get(this.host + '/my3Wheel_riderConfirm.php?hireNo=' + this.hireNo + '&driverId=' + this.driverId + '&wheelFee=' + this.hireFee).subscribe(data => {
       console.log(data);  
     document.getElementById("exitNote").innerHTML = "Have a safe journey";
     this.platform.exitApp();
-    //app.this.platform.exitApp();
     })
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ThirdPage');
   }
-
-//   exitApp(){
-//     document.getElementById("notice").innerHTML = "Your driver will come on the given time";
-//     this.platform.exitApp();  
-//  }
-
 }

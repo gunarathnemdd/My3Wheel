@@ -94,7 +94,6 @@ export class SecondPage {
     console.log(this.driverId);
 
     this.minDate = moment().format('YYYY-MM-DD');
-    // this.maxDate = moment(this.minDate, "YYYY-MM-DD").add(12,'months');
 
     this.hire = new FormGroup({
       pasngr_name: new FormControl('', Validators.compose([Validators.pattern('[a-zA-Z ]*'), Validators.required])),
@@ -106,10 +105,10 @@ export class SecondPage {
     });
   }
 
-  nxtpge(driverName, vehicleNo, driverId) {
+  nxtpge(hireNo, driverName, vehicleNo, driverId) {
     clearTimeout(this.timeoutId);
-    console.log(driverName, vehicleNo, driverId);
-    this.http.get(this.host + '/my3Wheel_isDriverConfirmed.php?passengerId=' + this.hire.value["pasngr_phone"] + '&driverId=' + driverId).subscribe(data => {
+    console.log(hireNo, driverName, vehicleNo, driverId);
+    this.http.get(this.host + '/my3Wheel_isDriverConfirmed.php?hireNo=' + hireNo).subscribe(data => {
 
       this.drivConfirmed = data["Driver_Accept"];
       this.hireFee = data["hireCost"];
@@ -118,6 +117,7 @@ export class SecondPage {
       if (this.drivConfirmed == 'yes') {
         console.log("yes", this.hire.value["pickup_location"], this.hire.value["destination"], this.hire.value["pickup_date"], this.hire.value["pickup_time"]);
         this.navCtrl.push(ThirdPage, {
+          hireNo: hireNo,
           driName: driverName,
           vehiNum: vehicleNo,
           pickup: this.hire.value["pickup_location"],
@@ -143,7 +143,7 @@ export class SecondPage {
       else if (this.drivConfirmed == 'no') {
         console.log("no");
         this.timeoutId = setTimeout(() => {
-          this.nxtpge(driverName, vehicleNo, driverId);
+          this.nxtpge(hireNo, driverName, vehicleNo, driverId);
         }, 10000)
       }
     });
@@ -276,20 +276,13 @@ export class SecondPage {
 
       this.http.get(this.host + '/my3wheel_passenger.php?pasngrName=' + this.hire.value["pasngr_name"] + '&pasngrPhone=' + this.hire.value["pasngr_phone"] + '&pickupLocation=' + this.hire.value["pickup_location"] + '&destination=' + this.hire.value["destination"] + '&pickupDate=' + this.hire.value["pickup_date"] + '&pickupTime=' + pTime + '&driverId=' + this.driverId).subscribe(data => {
         console.log(data["response"]);
-        this.nxtpge(this.driverName, this.vehicleNo, this.driverId);
+        let hireNo = data["hireNo"];
+        this.nxtpge(hireNo, this.driverName, this.vehicleNo, this.driverId);
         this.showAlert();
       });
     }
     else {
       this.checkValidation();
     }
-    // else {
-    //   let title = "Sorry!";
-    //       let message = "Invalid Phone Number";
-    //       this.valuePhone = document.getElementById ("inputPphone");
-    //       this.valuePhone.placeholder = message;
-    //       this.inputPhone.style.border = '1px solid red';
-    // 	console.log(message);
-    // }
   }
 }
