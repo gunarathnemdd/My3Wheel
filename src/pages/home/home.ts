@@ -55,6 +55,11 @@ export class HomePage {
 		}, 2000);
 	}
 
+	restartApp() {
+		this.splashScreen.show();
+		window.location.reload();
+	}
+
 	nextPage(driverName, vehicleNo, dr_distance, dr_time, drivId, drImage) {
 		console.log(drivId);
 		this.navCtrl.push(SecondPage, {
@@ -86,17 +91,17 @@ export class HomePage {
 	}
 
 	getDriverList() {
-		// this.loading = this.loadingCtrl.create({
-		// 	content: 'Please wait...'
-		// });
-		// this.loading.present();
+		this.loading = this.loadingCtrl.create({
+			content: 'Please wait...'
+		});
+		this.loading.present();
 		this.globalArray = [];
 		this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((position) => {
 			this.longitude = position['coords']['longitude'];
 			this.latitude = position['coords']['latitude'];
 			this.http.get(this.host + '/my3Wheel_getDriverDistance.php?longitude=' + this.longitude + '&latitude=' + this.latitude).subscribe(location => {
 				console.log(location);
-				//this.loading.dismiss();
+				this.loading.dismiss();
 				if (location != "No results") {
 					console.log(Object.keys(location).length);
 					for (let i = 0; i < Object.keys(location).length; i++) {
