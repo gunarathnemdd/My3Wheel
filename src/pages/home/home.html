@@ -19,16 +19,17 @@
 
 <ion-content>
   <ion-refresher (ionRefresh)="doRefresh($event)" [enabled]="refresherEnabled">
-    <ion-refresher-content
-      pullingIcon="arrow-dropdown" 
-      pullingText="Pull to refresh" 
-      refreshingSpinner="none">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="none">
     </ion-refresher-content>
   </ion-refresher>
 
   <ion-grid *ngFor="let item of globalArray; let i = index" no-padding>
     <div *ngIf="item.name == 'loading'">
-      <p class="nothingToDisplay">Thank you for using My3Wheel app. We have configured this app to compatible with your device. Please restart and enjoy the app.</p>
+      <p class="nothingToDisplay">Thank you for using My3Wheel app. We have configured this app to compatible with your device. Please restart and enjoy
+        the app.</p>
+      <div class="restartDiv" text-center>
+        <button ion-button class="restartBtn" (click)="restartApp();">Restart</button>
+      </div>
     </div>
 
     <div *ngIf="item.name == 'null'">
