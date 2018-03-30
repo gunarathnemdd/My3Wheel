@@ -94,6 +94,7 @@ export class SecondPage {
     console.log(this.driverId);
 
     this.minDate = moment().format('YYYY-MM-DD');
+    this.maxDate = moment(this.minDate,'YYYY-MM-DD').add(1, 'year').format('YYYY-MM-DD');
 
     this.hire = new FormGroup({
       pasngr_name: new FormControl('', Validators.compose([Validators.pattern('[a-zA-Z ]*'), Validators.required])),
