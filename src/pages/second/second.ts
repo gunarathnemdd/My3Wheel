@@ -78,7 +78,7 @@ export class SecondPage {
   public datePlaceholder: any = "yyyy/mm//dd";
   public timePlaceholder: any = "hh:mm";
 
-  host = 'https://greenic.000webhostapp.com';
+  host = 'http://www.my3wheel.lk/php/my3Wheel';
 
   constructor(private formBuilder: FormBuilder, public alertCtrl: AlertController, public platform: Platform, public authService: AuthServicesProvider, public navCtrl: NavController, public http: HttpClient, public navParams: NavParams) {
 

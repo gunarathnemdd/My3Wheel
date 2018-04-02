@@ -33,7 +33,7 @@ export class HomePage {
 	public loading: any;
 	public refresherEnabled: any;
 
-	host = 'https://greenic.000webhostapp.com/php/my3Wheel';
+	host = 'http://www.my3wheel.lk/php/my3Wheel';
 
 	public globalArray: any[] = [];
 

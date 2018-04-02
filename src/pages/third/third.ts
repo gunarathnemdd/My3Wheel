@@ -31,7 +31,7 @@ export class ThirdPage {
   public rider_Confirm : any;
   public hireNo : any;
  
-  host = 'https://greenic.000webhostapp.com';
+  host = 'http://www.my3wheel.lk/php/my3Wheel';
 
   constructor(public navCtrl: NavController, public app: App , public platform: Platform ,public navParams: NavParams, public http: HttpClient ) {
 
