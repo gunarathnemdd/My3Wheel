@@ -17,22 +17,24 @@ import 'rxjs/add/operator/map';
 })
 export class ForthPage {
 
-  public dri_name : string;
-  public vehicle_nu : string;
-  public pickup_location : string;
-  public destination : string;
-  public pickup_date : any;
-  public pickup_time : any;
+  public dri_name: string;
+  public vehicle_nu: string;
+  public pickup_location: string;
+  public destination: string;
+  public pickup_date: any;
+  public pickup_time: any;
+  public hireNo: any;
 
-  constructor(public navCtrl: NavController,public app: App, public navParams: NavParams, public http: HttpClient) {
+  host = 'http://www.my3wheel.lk/php/my3Wheel';
+
+  constructor(
+    public navCtrl: NavController,
+    public app: App, 
+    public navParams: NavParams, 
+    public http: HttpClient) {
 
     this.navParams = navParams
-    this.dri_name = this.navParams.get('driName');
-    this.vehicle_nu = this.navParams.get('vehiNum');
-    this.pickup_location = navParams.get('pickup');
-    this.destination = navParams.get('pDestination');
-    this.pickup_date = navParams.get('pickDate');
-    this.pickup_time = navParams.get('pickTime');
+    this.hireNo = navParams.get('hireNo');
   }
 
   goHome(){ 
@@ -42,7 +44,14 @@ export class ForthPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ForthPage');
+    this.http.get(this.host + '/my3Wheel_isDriverConfirmed.php?hireNo=' + this.hireNo).subscribe(data => {
+      this.dri_name = data["hireRate"];
+      this.vehicle_nu = data["hireRate"];
+      this.pickup_location = data["journeyStart"];
+      this.destination = data["journeyEnd"];
+      this.pickup_date = data["date"];
+      this.pickup_time = data["time"];
+    });
   }
-
 
 }

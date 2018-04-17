@@ -124,7 +124,7 @@
 				</ion-col>
 
 				<ion-col center>
-					<ion-datetime [min]="minDate" max="2020-12-31" pickerFormat="YYYY/MM/DD" id="inputPdate" displayFormat="YYYY/MM/DD" formControlName="pickup_date"
+					<ion-datetime [min]="minDate" [max]="maxDate" pickerFormat="YYYY/MM/DD" id="inputPdate" displayFormat="YYYY/MM/DD" formControlName="pickup_date"
 					 class="inputDateTime" [placeholder]="datePlaceholder" (ngModelChange)='onClickNextField2()'> </ion-datetime>
 				</ion-col>
 			</ion-row>

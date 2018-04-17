@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
-import { Platform, NavController, LoadingController } from 'ionic-angular';
+import { Platform, NavController, LoadingController, AlertController } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
-import { SecondPage } from '../second/second';
-import { AuthServicesProvider } from '../../providers/auth-services/auth-services';
 import { Geolocation } from '@ionic-native/geolocation';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { LocalNotifications } from '@ionic-native/local-notifications';
+
+import { SecondPage } from '../second/second';
+import { ThirdPage } from '../../pages/third/third';
+import { ForthPage } from '../../pages/forth/forth';
 
 @Component({
 	selector: 'page-home',
@@ -33,19 +37,105 @@ export class HomePage {
 	public loading: any;
 	public refresherEnabled: any;
 
-	host = 'https://greenic.000webhostapp.com/php/my3Wheel';
+	host = 'http://www.my3wheel.lk/php/my3Wheel';
 
 	public globalArray: any[] = [];
 
 	constructor(
+		public platform: Platform,
 		private storage: Storage,
+		private push: Push,
 		public loadingCtrl: LoadingController,
 		public splashScreen: SplashScreen,
+		public localNotifications: LocalNotifications,
 		public http: HttpClient,
-		public authService: AuthServicesProvider,
 		public navCtrl: NavController,
-		private geolocation: Geolocation) {
+		private geolocation: Geolocation,
+		public alertCtrl: AlertController) {
+		platform.ready().then(() => {
+			this.initPushNotification();
+		});
+	}
 
+	initPushNotification() {
+		if (!this.platform.is('cordova')) {
+			console.log('Push notifications not initialized. Cordova is not available - Run in physical device');
+			return;
+		}
+		const options: PushOptions = {
+			android: {
+				senderID: '326433778451'
+			},
+			ios: {
+				alert: 'true',
+				badge: false,
+				sound: 'true'
+			},
+			windows: {}
+		};
+		const pushObject: PushObject = this.push.init(options);
+
+		pushObject.on('registration').subscribe((data: any) => {
+			console.log('device token -> ' + data.registrationId);
+			this.storage.set('deviceToken', data.registrationId);
+			//TODO - send device token to server
+		});
+
+		pushObject.on('notification').subscribe((data: any) => {
+			console.log('data -> ' + data);
+			//if user using app and push notification comes
+			if (data.additionalData.foreground) {
+				// if application open, show popup
+				let confirmAlert = this.alertCtrl.create({
+					title: data.title,
+					message: data.message,
+					buttons: [{
+						text: 'Ignore',
+						role: 'cancel'
+					}, {
+						text: 'View',
+						handler: () => {
+							//TODO: Your logic here
+							//this.showNotification(data.message);
+							if(data.title == "Hire Confirmed") {
+								this.navCtrl.push(ThirdPage, {
+									hireNo: data.message
+								})
+							}
+							else if(data.title == "Hire Rejected") {
+								this.navCtrl.push(ForthPage, {
+									hireNo: data.message
+								})
+							}
+							console.log('Push notification received');
+						}
+					}]
+				});
+				confirmAlert.present();
+			} else {
+				//if user NOT using app and push notification comes
+				//TODO: Your logic on click of push notification directly
+				if(data.title == "Hire Confirmed") {
+					this.navCtrl.push(ThirdPage, {
+						hireNo: data.message
+					})
+				}
+				else if(data.title == "Hire Rejected") {
+					this.navCtrl.push(ForthPage, {
+						hireNo: data.message
+					})
+				}
+				console.log('Push notification clicked');
+			}
+		});
+
+		pushObject.on('error').subscribe(error => console.log(error));
+	}
+
+	showNotification(message) {
+		this.localNotifications.schedule({
+			text: message
+		});
 	}
 
 	doRefresh(refresher) {

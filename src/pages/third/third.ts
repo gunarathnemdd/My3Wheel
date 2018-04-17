@@ -18,36 +18,30 @@ import { App } from 'ionic-angular';
 })
 export class ThirdPage {
 
-  public dri_name : string;
-  public vehicle_nu : string;
-  public dri_phone : any;
-  public pickup_location : string;
-  public destination : string;
-  public pickup_date : any;
-  public pickup_time : any;
-  public hireFee : any;
-  public driverId : any;
-  public passenger_Id : any;
-  public rider_Confirm : any;
-  public hireNo : any;
- 
-  host = 'https://greenic.000webhostapp.com';
+  public dri_name: string;
+  public vehicle_nu: string;
+  public pickup_location: string;
+  public destination: string;
+  public pickup_date: any;
+  public pickup_time: any;
+  public hireFee: any;
+  public driverId: any;
+  public hireNo: any;
+  public mobile_nu: any;
 
-  constructor(public navCtrl: NavController, public app: App , public platform: Platform ,public navParams: NavParams, public http: HttpClient ) {
+  host = 'http://www.my3wheel.lk/php/my3Wheel';
+
+  constructor(
+    public navCtrl: NavController,
+    public app: App,
+    public platform: Platform,
+    public navParams: NavParams,
+    public http: HttpClient) {
 
     this.platform = platform;
 
     this.navParams = navParams;
     this.hireNo = navParams.get('hireNo');
-    this.dri_name = this.navParams.get('driName');
-    this.vehicle_nu = this.navParams.get('vehiNum');
-    this.pickup_location = navParams.get('pickup');
-    this.destination = navParams.get('pDestination');
-    this.pickup_date = navParams.get('pickDate');
-    this.pickup_time = navParams.get('pickTime');  
-    this.hireFee = navParams.get('wheelFee'); 
-    this.driverId = navParams.get('drivId');
-    this.passenger_Id = navParams.get('riderId');
   }
 
   goHome(){
@@ -59,7 +53,6 @@ export class ThirdPage {
   }
 
   exitApp(){
-    this.rider_Confirm = 'yes';
     console.log(this.hireFee);
     this.http.get(this.host + '/my3Wheel_riderConfirm.php?hireNo=' + this.hireNo + '&driverId=' + this.driverId + '&wheelFee=' + this.hireFee).subscribe(data => {
       console.log(data);  
@@ -70,5 +63,16 @@ export class ThirdPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ThirdPage');
+    this.http.get(this.host + '/my3Wheel_isDriverConfirmed.php?hireNo=' + this.hireNo).subscribe(data => {
+      this.dri_name = data["hireRate"];
+      this.vehicle_nu = data["hireRate"];
+      this.pickup_location = data["journeyStart"];
+      this.destination = data["journeyEnd"];
+      this.pickup_date = data["date"];
+      this.pickup_time = data["time"];
+      this.hireFee = data["hireRate"];
+      this.driverId = data["driverID"];
+      this.mobile_nu = data["tpNumber"];
+    });
   }
 }
