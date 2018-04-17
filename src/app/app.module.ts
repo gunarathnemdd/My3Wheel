@@ -1,21 +1,20 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
-import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-import { SecondPage } from '../pages/second/second';
-import { AuthServicesProvider} from '../providers/auth-services/auth-services';
-import { IonicStorageModule } from '@ionic/storage';
-import { ThirdPage } from '../pages/third/third';
-import { ForthPage } from '../pages/forth/forth';
-import { Geolocation } from '@ionic-native/geolocation';
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
+import { IonicStorageModule } from '@ionic/storage';
+import { HttpClientModule } from '@angular/common/http';
+import { Geolocation } from '@ionic-native/geolocation';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-
+import { SecondPage } from '../pages/second/second';
+import { ThirdPage } from '../pages/third/third';
+import { ForthPage } from '../pages/forth/forth';
 
 @NgModule({
   declarations: [
@@ -29,8 +28,7 @@ import { HomePage } from '../pages/home/home';
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot(),
-    HttpModule
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -43,9 +41,10 @@ import { HomePage } from '../pages/home/home';
   providers: [
     StatusBar,
     SplashScreen,
-    Geolocation,
-    AuthServicesProvider,
+    Push,
+    LocalNotifications,
     LocationAccuracy,
+    Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
