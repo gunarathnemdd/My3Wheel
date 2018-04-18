@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { App } from 'ionic-angular';
 
+import { HomePage } from '../home/home';
+
 /**
  * Generated class for the ThirdPage page.
  *
@@ -42,30 +44,31 @@ export class ThirdPage {
 
     this.navParams = navParams;
     this.hireNo = navParams.get('hireNo');
+    console.log(this.hireNo);
   }
 
-  goHome(){
-    this.http.get(this.host + '/my3Wheel_riderReject.php?hireNo=' + this.hireNo).subscribe(data => {
-      console.log(data); 
-    const root = this.app.getRootNav();
-    root.popToRoot();
+  goHome() {
+    this.http.get(this.host + '/my3Wheel_riderReject.php?hireNo=' + this.hireNo + '&driverId=' + this.driverId).subscribe(data => {
+      console.log(data);
+      this.navCtrl.setRoot(HomePage);
     })
   }
 
-  exitApp(){
+  exitApp() {
     console.log(this.hireFee);
     this.http.get(this.host + '/my3Wheel_riderConfirm.php?hireNo=' + this.hireNo + '&driverId=' + this.driverId + '&wheelFee=' + this.hireFee).subscribe(data => {
-      console.log(data);  
-    document.getElementById("exitNote").innerHTML = "Have a safe journey";
-    this.platform.exitApp();
+      console.log(data);
+      document.getElementById("exitNote").innerHTML = "Have a safe journey";
+      this.platform.exitApp();
     })
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ThirdPage');
+    console.log('ionViewDidLoad ThirdPage ' + this.hireNo);
     this.http.get(this.host + '/my3Wheel_isDriverConfirmed.php?hireNo=' + this.hireNo).subscribe(data => {
-      this.dri_name = data["hireRate"];
-      this.vehicle_nu = data["hireRate"];
+      console.log(data);
+      this.dri_name = data["displayName"];
+      this.vehicle_nu = data["vehicleNumber"];
       this.pickup_location = data["journeyStart"];
       this.destination = data["journeyEnd"];
       this.pickup_date = data["date"];

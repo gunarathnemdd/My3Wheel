@@ -82,32 +82,29 @@ export class HomePage {
 		});
 
 		pushObject.on('notification').subscribe((data: any) => {
-			console.log('data -> ' + data);
+			console.log('data -> ' , data);
 			//if user using app and push notification comes
 			if (data.additionalData.foreground) {
 				// if application open, show popup
 				let confirmAlert = this.alertCtrl.create({
 					title: data.title,
 					message: data.message,
+					enableBackdropDismiss: false,
 					buttons: [{
-						text: 'Ignore',
-						role: 'cancel'
-					}, {
 						text: 'View',
 						handler: () => {
 							//TODO: Your logic here
-							//this.showNotification(data.message);
 							if(data.title == "Hire Confirmed") {
 								this.navCtrl.push(ThirdPage, {
-									hireNo: data.message
+									hireNo: data.additionalData['subtitle']
 								})
 							}
 							else if(data.title == "Hire Rejected") {
 								this.navCtrl.push(ForthPage, {
-									hireNo: data.message
+									hireNo: data.additionalData['subtitle']
 								})
 							}
-							console.log('Push notification received');
+							console.log('Push notification received ' , data.subtitle);
 						}
 					}]
 				});
@@ -117,25 +114,19 @@ export class HomePage {
 				//TODO: Your logic on click of push notification directly
 				if(data.title == "Hire Confirmed") {
 					this.navCtrl.push(ThirdPage, {
-						hireNo: data.message
+						hireNo: data.additionalData['subtitle']
 					})
 				}
 				else if(data.title == "Hire Rejected") {
 					this.navCtrl.push(ForthPage, {
-						hireNo: data.message
+						hireNo: data.additionalData['subtitle']
 					})
 				}
-				console.log('Push notification clicked');
+				console.log('Push notification clicked ' , data.subtitle);
 			}
 		});
 
 		pushObject.on('error').subscribe(error => console.log(error));
-	}
-
-	showNotification(message) {
-		this.localNotifications.schedule({
-			text: message
-		});
 	}
 
 	doRefresh(refresher) {
