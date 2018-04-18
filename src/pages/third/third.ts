@@ -44,10 +44,11 @@ export class ThirdPage {
 
     this.navParams = navParams;
     this.hireNo = navParams.get('hireNo');
+    console.log(this.hireNo);
   }
 
   goHome() {
-    this.http.get(this.host + '/my3Wheel_riderReject.php?hireNo=' + this.hireNo).subscribe(data => {
+    this.http.get(this.host + '/my3Wheel_riderReject.php?hireNo=' + this.hireNo + '&driverId=' + this.driverId).subscribe(data => {
       console.log(data);
       this.navCtrl.setRoot(HomePage);
     })
@@ -63,7 +64,7 @@ export class ThirdPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ThirdPage');
+    console.log('ionViewDidLoad ThirdPage ' + this.hireNo);
     this.http.get(this.host + '/my3Wheel_isDriverConfirmed.php?hireNo=' + this.hireNo).subscribe(data => {
       console.log(data);
       this.dri_name = data["displayName"];

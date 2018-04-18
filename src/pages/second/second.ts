@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, Platform, AlertController } from '
 import { HttpClient } from '@angular/common/http';
 import moment from 'moment';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
+import { Storage } from '@ionic/storage';
 
 import { ThirdPage } from '../../pages/third/third';
 import { ForthPage } from '../../pages/forth/forth';
@@ -80,7 +81,13 @@ export class SecondPage {
 
   host = 'http://www.my3wheel.lk/php/my3Wheel';
 
-  constructor(public alertCtrl: AlertController, public platform: Platform, public navCtrl: NavController, public http: HttpClient, public navParams: NavParams) {
+  constructor(
+    public alertCtrl: AlertController, 
+    public platform: Platform, 
+    public navCtrl: NavController, 
+    public http: HttpClient, 
+    public navParams: NavParams,
+		private storage: Storage,) {
 
     this.platform = platform;
 
@@ -106,50 +113,6 @@ export class SecondPage {
     });
   }
 
-  // nxtpge(hireNo, driverName, vehicleNo, driverId) {
-  //   clearTimeout(this.timeoutId);
-  //   console.log(hireNo, driverName, vehicleNo, driverId);
-  //   this.http.get(this.host + '/my3Wheel_isDriverConfirmed.php?hireNo=' + hireNo).subscribe(data => {
-
-  //     this.drivConfirmed = data["Driver_Accept"];
-  //     this.hireFee = data["hireCost"];
-  //     console.log(this.drivConfirmed, this.hireFee);
-
-  //     if (this.drivConfirmed == 'yes') {
-  //       console.log("yes", this.hire.value["pickup_location"], this.hire.value["destination"], this.hire.value["pickup_date"], this.hire.value["pickup_time"]);
-  //       this.navCtrl.push(ThirdPage, {
-  //         hireNo: hireNo,
-  //         driName: driverName,
-  //         vehiNum: vehicleNo,
-  //         pickup: this.hire.value["pickup_location"],
-  //         pDestination: this.hire.value["destination"],
-  //         pickDate: this.hire.value["pickup_date"],
-  //         pickTime: this.hire.value["pickup_time"],
-  //         riderId: this.hire.value["pasngr_phone"],
-  //         wheelFee: this.hireFee,
-  //         drivId: this.driverId
-  //       })
-  //     }
-  //     else if (this.drivConfirmed == 'No') {
-  //       console.log("No", this.hire.value["pickup_location"], this.hire.value["destination"], this.hire.value["pickup_date"], this.hire.value["pickup_time"]);
-  //       this.navCtrl.push(ForthPage, {
-  //         driName: driverName,
-  //         vehiNum: vehicleNo,
-  //         pickup: this.hire.value["pickup_location"],
-  //         pDestination: this.hire.value["destination"],
-  //         pickDate: this.hire.value["pickup_date"],
-  //         pickTime: this.hire.value["pickup_time"]
-  //       })
-  //     }
-  //     else if (this.drivConfirmed == 'no') {
-  //       console.log("no");
-  //       this.timeoutId = setTimeout(() => {
-  //         this.nxtpge(hireNo, driverName, vehicleNo, driverId);
-  //       }, 10000)
-  //     }
-  //   });
-  // }
-
   ionViewDidLoad() {
     console.log('ionViewDidLoad SecondPage , AuthServicesProvider');
   }
@@ -163,7 +126,7 @@ export class SecondPage {
         {
           text: 'OK',
           handler: () => {
-            //this.platform.exitApp();
+            this.platform.exitApp();
           }
         }
       ]
@@ -275,12 +238,13 @@ export class SecondPage {
   getHire() {
     if (this.hire["valid"]) {
       let pTime = moment(this.hire.value["pickup_time"], "hh:mm").format("hh:mm a");
-
-      this.http.get(this.host + '/my3Wheel_passenger.php?pasngrName=' + this.hire.value["pasngr_name"] + '&pasngrPhone=' + this.hire.value["pasngr_phone"] + '&pickupLocation=' + this.hire.value["pickup_location"] + '&destination=' + this.hire.value["destination"] + '&pickupDate=' + this.hire.value["pickup_date"] + '&pickupTime=' + pTime + '&driverId=' + this.driverId).subscribe(data => {
-        console.log(data["response"]);
-        let hireNo = data["hireNo"];
-        //this.nxtpge(hireNo, this.driverName, this.vehicleNo, this.driverId);
-        this.showAlert();
+      this.storage.get('deviceToken').then((val) => {
+        let deviceToken = val;
+        this.http.get(this.host + '/my3Wheel_passenger.php?pasngrName=' + this.hire.value["pasngr_name"] + '&pasngrPhone=' + this.hire.value["pasngr_phone"] + '&pickupLocation=' + this.hire.value["pickup_location"] + '&destination=' + this.hire.value["destination"] + '&pickupDate=' + this.hire.value["pickup_date"] + '&pickupTime=' + pTime + '&driverId=' + this.driverId + '&deviceToken=' + deviceToken).subscribe(data => {
+          console.log(data["response"]);
+          let hireNo = data["hireNo"];
+          this.showAlert();
+        });
       });
     }
     else {
