@@ -89,10 +89,8 @@ export class HomePage {
 				let confirmAlert = this.alertCtrl.create({
 					title: data.title,
 					message: data.message,
+					enableBackdropDismiss: false,
 					buttons: [{
-						text: 'Ignore',
-						role: 'cancel'
-					}, {
 						text: 'View',
 						handler: () => {
 							//TODO: Your logic here

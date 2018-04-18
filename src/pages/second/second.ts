@@ -158,6 +158,7 @@ export class SecondPage {
     let alert = this.alertCtrl.create({
       title: 'Successfully Sent!',
       subTitle: 'Request has been sent successfully, You will receive a reply in next 3 minutes!',
+			enableBackdropDismiss: false,
       buttons: [
         {
           text: 'OK',
