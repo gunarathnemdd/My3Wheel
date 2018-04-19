@@ -88,7 +88,7 @@ export class HomePage {
 				// if application open, show popup
 				let confirmAlert = this.alertCtrl.create({
 					title: data.title,
-					message: data.message,
+					subTitle: data.message,
 					enableBackdropDismiss: false,
 					buttons: [{
 						text: 'View',
