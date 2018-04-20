@@ -64,7 +64,7 @@ export class HomePage {
 		}
 		const options: PushOptions = {
 			android: {
-				senderID: '326433778451'
+				senderID: '693145121166'
 			},
 			ios: {
 				alert: 'true',
@@ -88,7 +88,7 @@ export class HomePage {
 				// if application open, show popup
 				let confirmAlert = this.alertCtrl.create({
 					title: data.title,
-					message: data.message,
+					subTitle: data.message,
 					enableBackdropDismiss: false,
 					buttons: [{
 						text: 'View',
