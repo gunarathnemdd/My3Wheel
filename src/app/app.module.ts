@@ -15,6 +15,8 @@ import { HomePage } from '../pages/home/home';
 import { SecondPage } from '../pages/second/second';
 import { ThirdPage } from '../pages/third/third';
 import { ForthPage } from '../pages/forth/forth';
+import { SelectConfirmedHirePage } from '../pages/select-confirmed-hire/select-confirmed-hire';
+import { ViewConfirmedHiresPage } from '../pages/view-confirmed-hires/view-confirmed-hires';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { ForthPage } from '../pages/forth/forth';
     HomePage,
     SecondPage,
     ThirdPage,
-    ForthPage
+    ForthPage,
+    SelectConfirmedHirePage,
+    ViewConfirmedHiresPage
   ],
   imports: [
     BrowserModule,
@@ -36,7 +40,9 @@ import { ForthPage } from '../pages/forth/forth';
     HomePage,
     SecondPage,
     ThirdPage,
-    ForthPage
+    ForthPage,
+    SelectConfirmedHirePage,
+    ViewConfirmedHiresPage
   ],
   providers: [
     StatusBar,

@@ -1,6 +1,6 @@
 page-home {
 
-	.icon{
+	.driver-icon{
 		padding-top: 4px;
 		padding-right:15px;
 		width: 47px;
@@ -145,6 +145,27 @@ page-home {
     	margin-right: auto;
 	}
 
+	.btnRow {
+		margin: 10px;
+	}
+
+	.newHire {
+		height: 60px;
+		border-radius: 10px;
+		font-size: 2.0rem!important;
+		border: 1px solid yellowgreen;
+		background-color: #FCBB83;
+		color: #534bff;
+	}
+
+	ion-icon {
+		margin-left: auto;
+		font-size: 2em;
+	}
+
+	.hire-span {
+		margin-left: auto;
+	}
 }
 
 

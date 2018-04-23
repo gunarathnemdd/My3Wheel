@@ -1,15 +1,18 @@
 import { Component } from '@angular/core';
-import { Platform, NavController, LoadingController, AlertController } from 'ionic-angular';
+import { Platform, NavController, LoadingController, AlertController, ToastController } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { LocalNotifications } from '@ionic-native/local-notifications';
+import { orderBy, filter } from 'lodash';
+import moment from 'moment';
 
 import { SecondPage } from '../second/second';
 import { ThirdPage } from '../../pages/third/third';
 import { ForthPage } from '../../pages/forth/forth';
+import { ViewConfirmedHiresPage } from '../view-confirmed-hires/view-confirmed-hires';
 
 @Component({
 	selector: 'page-home',
@@ -40,6 +43,7 @@ export class HomePage {
 	host = 'http://www.my3wheel.lk/php/my3Wheel';
 
 	public globalArray: any[] = [];
+	public showMyHireBtn: boolean;
 
 	constructor(
 		public platform: Platform,
@@ -51,6 +55,7 @@ export class HomePage {
 		public http: HttpClient,
 		public navCtrl: NavController,
 		private geolocation: Geolocation,
+		public toastCtrl: ToastController,
 		public alertCtrl: AlertController) {
 		platform.ready().then(() => {
 			this.initPushNotification();
@@ -82,7 +87,7 @@ export class HomePage {
 		});
 
 		pushObject.on('notification').subscribe((data: any) => {
-			console.log('data -> ' , data);
+			console.log('data -> ', data);
 			//if user using app and push notification comes
 			if (data.additionalData.foreground) {
 				// if application open, show popup
@@ -94,17 +99,21 @@ export class HomePage {
 						text: 'View',
 						handler: () => {
 							//TODO: Your logic here
-							if(data.title == "Hire Confirmed") {
+							if (data.title == "Hire Confirmed") {
 								this.navCtrl.push(ThirdPage, {
 									hireNo: data.additionalData['subtitle']
-								})
+								});
 							}
-							else if(data.title == "Hire Rejected") {
+							else if (data.title == "Hire Rejected") {
 								this.navCtrl.push(ForthPage, {
 									hireNo: data.additionalData['subtitle']
-								})
+								});
 							}
-							console.log('Push notification received ' , data.subtitle);
+							else if (data.title == "View Hire") {
+								console.log("view-confirmed-hires");
+								this.navCtrl.push(ViewConfirmedHiresPage);
+							}
+							console.log('Push notification received');
 						}
 					}]
 				});
@@ -112,17 +121,21 @@ export class HomePage {
 			} else {
 				//if user NOT using app and push notification comes
 				//TODO: Your logic on click of push notification directly
-				if(data.title == "Hire Confirmed") {
+				if (data.title == "Hire Confirmed") {
 					this.navCtrl.push(ThirdPage, {
 						hireNo: data.additionalData['subtitle']
-					})
+					});
 				}
-				else if(data.title == "Hire Rejected") {
+				else if (data.title == "Hire Rejected") {
 					this.navCtrl.push(ForthPage, {
 						hireNo: data.additionalData['subtitle']
-					})
+					});
 				}
-				console.log('Push notification clicked ' , data.subtitle);
+				else if (data.title == "View Hire") {
+					console.log("view-confirmed-hires");
+					this.navCtrl.push(ViewConfirmedHiresPage);
+				}
+				console.log('Push notification clicked');
 			}
 		});
 
@@ -159,12 +172,14 @@ export class HomePage {
 		this.storage.get('isLoaded').then((val) => {
 			if (val == "loaded") {
 				this.getDriverList();
+				this.showMyHireBtn = false;
 				this.refresherEnabled = true;
 				console.log("loaded");
 			}
 			else {
 				this.storage.set('isLoaded', "loaded");
 				this.globalArray.push({ name: "loading" });
+				this.showMyHireBtn = true;
 				this.refresherEnabled = false;
 				console.log("not loaded");
 			}
@@ -194,7 +209,64 @@ export class HomePage {
 					console.log('location no');
 					this.globalArray.push({ name: "null" });
 				}
-			});
+			},
+				(err) => {
+					console.log(err);
+				});
 		});
+	}
+
+	confirmedHire() {
+		console.log("confirmedHire");
+		this.storage.get('deviceToken').then((val) => {
+			this.http.get(this.host + '/my3Wheel_availableHire.php?deviceToken=' + val).subscribe(data => {
+				console.log(data);
+				if (data != '0') {
+					let hire = data;
+					hire = filter(hire, o => o.p_date >= moment().format('YYYY-MM-DD'));
+					if (Object.keys(hire).length > 0) {
+						this.navCtrl.push(ViewConfirmedHiresPage);
+					}
+					else {
+						let title = "No Confirmed Hires!";
+						let message = "You don't have any confirmed hires at this moment.";
+						this.alert(title, message);
+					}
+				}
+				else {
+					let title = "No Confirmed Hires!";
+					let message = "You don't have any confirmed hires at this moment.";
+					this.alert(title, message);
+				}
+			},
+				(err) => {
+					let message = "Network error! Please check your internet connection.";
+					this.toaster(message);
+				});
+		});
+	}
+
+	toaster(message) {
+		let toast = this.toastCtrl.create({
+			message: message,
+			duration: 3000,
+			position: 'bottom'
+		});
+		toast.present();
+	}
+
+	alert(title, message) {
+		let alert = this.alertCtrl.create({
+			title: title,
+			subTitle: message,
+			enableBackdropDismiss: false,
+			buttons: [
+				{
+					text: 'OK',
+					role: 'cancel'
+				}
+			]
+		});
+		alert.present();
 	}
 }
