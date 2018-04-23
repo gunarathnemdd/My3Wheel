@@ -11,7 +11,7 @@
 
       <ion-col col-auto>
         <ion-item-group class="symbol">
-          <img class="icon" src="assets/imgs/rider.png" /> </ion-item-group>
+          <img class="driver-icon" src="assets/imgs/rider.png" /> </ion-item-group>
       </ion-col>
     </ion-row>
   </ion-navbar>
@@ -22,6 +22,15 @@
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="none">
     </ion-refresher-content>
   </ion-refresher>
+
+  <ion-row class="btnRow" [hidden]="showMyHireBtn">
+    <button (click)="confirmedHire()" ion-button class="newHire" block>
+      <span class="hire-span">VIEW MY HIRES</span>
+      <ion-icon class="" name="ios-checkmark-circle-outline">
+        <ion-badge id="notifications-badge" color="danger">{{noOfConfirmedHires}}</ion-badge>
+      </ion-icon>
+    </button>
+  </ion-row>
 
   <ion-grid *ngFor="let item of globalArray; let i = index" no-padding>
     <div *ngIf="item.name == 'loading'">
@@ -37,7 +46,6 @@
     </div>
 
     <div *ngIf="i<10">
-
       <div *ngIf="(item.name != 'null') && (item.name != 'loading')">
         <ion-row class="availableDriverList" (click)="nextPage(item.name, item.vehicleNo, item.distance, item.time, item.drivrId , item.dImage);">
           <ion-col col-auto>
