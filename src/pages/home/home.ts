@@ -192,27 +192,48 @@ export class HomePage {
 		});
 		this.loading.present();
 		this.globalArray = [];
-		this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((position) => {
-			this.longitude = position['coords']['longitude'];
-			this.latitude = position['coords']['latitude'];
-			this.http.get(this.host + '/my3Wheel_getDriverDistance.php?longitude=' + this.longitude + '&latitude=' + this.latitude).subscribe(location => {
-				console.log(location);
-				this.loading.dismiss();
-				if (location != "No results") {
-					console.log(Object.keys(location).length);
-					for (let i = 0; i < Object.keys(location).length; i++) {
-						let image = "data:image/png;base64," + location[i]["DriverImage"];
-						this.globalArray.push({ name: location[i]["DriverName"], vehicleNo: location[i]["DriverVehicle"], distance: location[i]["DriverDistance"], time: location[i]["DriverTime"], drivrId: location[i]["DriverID"], dImage: image });
-					}
+		this.storage.get('deviceToken').then((val) => {
+			this.http.get(this.host + '/my3Wheel_unconfirmedHires.php?deviceToken=' + val).subscribe(data => {
+				if (data == "no hires") {
+					this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((position) => {
+						this.longitude = position['coords']['longitude'];
+						this.latitude = position['coords']['latitude'];
+						this.http.get(this.host + '/my3Wheel_getDriverDistance.php?longitude=' + this.longitude + '&latitude=' + this.latitude).subscribe(location => {
+							console.log(location);
+							this.loading.dismiss();
+							if (location != "No results") {
+								console.log(Object.keys(location).length);
+								for (let i = 0; i < Object.keys(location).length; i++) {
+									let image = "data:image/png;base64," + location[i]["DriverImage"];
+									this.globalArray.push({ name: location[i]["DriverName"], vehicleNo: location[i]["DriverVehicle"], distance: location[i]["DriverDistance"], time: location[i]["DriverTime"], drivrId: location[i]["DriverID"], dImage: image });
+								}
+							}
+							else {
+								console.log('location no');
+								this.globalArray.push({ name: "null" });
+							}
+						},
+							(err) => {
+								console.log(err);
+								this.globalArray.push({ name: "null" });
+								this.loading.dismiss();
+							});
+					});
 				}
 				else {
-					console.log('location no');
-					this.globalArray.push({ name: "null" });
+					this.globalArray.push({ name: "activeHire" });
+					this.loading.dismiss();
 				}
 			},
 				(err) => {
 					console.log(err);
+					this.globalArray.push({ name: "null" });
+					this.loading.dismiss();
 				});
+		}).catch(err => {
+			console.error();
+			this.globalArray.push({ name: "null" });
+			this.loading.dismiss();
 		});
 	}
 
