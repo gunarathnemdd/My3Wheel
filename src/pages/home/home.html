@@ -45,8 +45,12 @@
       <p class="nothingToDisplay">There are no three wheels nearby. Please try again in few minutes.</p>
     </div>
 
+    <div *ngIf="item.name == 'activeHire'">
+      <p class="nothingToDisplay">You have an unconfirmed hire. Please wait until it confirmed or reject.</p>
+    </div>
+
     <div *ngIf="i<10">
-      <div *ngIf="(item.name != 'null') && (item.name != 'loading')">
+      <div *ngIf="(item.name != 'null') && (item.name != 'loading') && (item.name != 'activeHire')">
         <ion-row class="availableDriverList" (click)="nextPage(item.name, item.vehicleNo, item.distance, item.time, item.drivrId , item.dImage);">
           <ion-col col-auto>
             <div class="imgContainer">
