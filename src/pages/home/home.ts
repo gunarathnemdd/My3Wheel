@@ -8,6 +8,7 @@ import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { orderBy, filter } from 'lodash';
 import moment from 'moment';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 import { SecondPage } from '../second/second';
 import { ThirdPage } from '../../pages/third/third';
@@ -51,6 +52,7 @@ export class HomePage {
 		private push: Push,
 		public loadingCtrl: LoadingController,
 		public splashScreen: SplashScreen,
+		private backgroundMode: BackgroundMode,
 		public localNotifications: LocalNotifications,
 		public http: HttpClient,
 		public navCtrl: NavController,
@@ -122,16 +124,19 @@ export class HomePage {
 				//if user NOT using app and push notification comes
 				//TODO: Your logic on click of push notification directly
 				if (data.title == "Hire Confirmed") {
+					this.backgroundMode.moveToForeground();
 					this.navCtrl.push(ThirdPage, {
 						hireNo: data.additionalData['subtitle']
 					});
 				}
 				else if (data.title == "Hire Rejected") {
+					this.backgroundMode.moveToForeground();
 					this.navCtrl.push(ForthPage, {
 						hireNo: data.additionalData['subtitle']
 					});
 				}
 				else if (data.title == "View Hire") {
+					this.backgroundMode.moveToForeground();
 					console.log("view-confirmed-hires");
 					this.navCtrl.push(ViewConfirmedHiresPage);
 				}
