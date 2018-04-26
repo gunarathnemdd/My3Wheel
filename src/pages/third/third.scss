@@ -8,6 +8,7 @@ page-third {
 	.topic{
 		font-size: 22px;
 		background: -webkit-linear-gradient(rgb(245, 223, 24), rgb(230, 20, 20));
+		background-clip: text;
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 	}

@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform, AlertController, ToastController } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import moment from 'moment';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Storage } from '@ionic/storage';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
+import { HomePage } from '../home/home';
 import { ThirdPage } from '../../pages/third/third';
 import { ForthPage } from '../../pages/forth/forth';
 
@@ -76,18 +78,24 @@ export class SecondPage {
   public phoneNumberPlaceholder: any = "Phone Number";
   public pickupLocationPlaceholder: any = "Pickup Location";
   public destinationPlaceholder: any = "Destination";
-  public datePlaceholder: any = "yyyy/mm//dd";
+  public datePlaceholder: any = "yyyy/mm/dd";
   public timePlaceholder: any = "hh:mm";
 
   host = 'http://www.my3wheel.lk/php/my3Wheel';
+  host2 = 'http://www.my3wheel.lk/php/myHire';
+
+  public pushTimeOut: any;
+  public hireNo: any;
 
   constructor(
-    public alertCtrl: AlertController, 
-    public platform: Platform, 
-    public navCtrl: NavController, 
-    public http: HttpClient, 
+    public alertCtrl: AlertController,
+    public platform: Platform,
+    public navCtrl: NavController,
+    public http: HttpClient,
+    public toastCtrl: ToastController,
     public navParams: NavParams,
-		private storage: Storage,) {
+    private storage: Storage,
+    private backgroundMode: BackgroundMode) {
 
     this.platform = platform;
 
@@ -101,7 +109,7 @@ export class SecondPage {
     console.log(this.driverId);
 
     this.minDate = moment().format('YYYY-MM-DD');
-    this.maxDate = moment(this.minDate,'YYYY-MM-DD').add(1, 'year').format('YYYY-MM-DD');
+    this.maxDate = moment(this.minDate, 'YYYY-MM-DD').add(1, 'year').format('YYYY-MM-DD');
 
     this.hire = new FormGroup({
       pasngr_name: new FormControl('', Validators.compose([Validators.pattern('[a-zA-Z ]*'), Validators.required])),
@@ -121,18 +129,57 @@ export class SecondPage {
     let alert = this.alertCtrl.create({
       title: 'Successfully Sent!',
       subTitle: 'Request has been sent successfully, You will receive a reply in next 3 minutes!',
-			enableBackdropDismiss: false,
+      enableBackdropDismiss: false,
       buttons: [
         {
           text: 'OK',
           handler: () => {
-            this.platform.exitApp();
+            //this.platform.exitApp();
+            this.navCtrl.setRoot(HomePage);
+            this.backgroundMode.enable();
+            this.backgroundMode.moveToBackground();
+            this.backgroundMode.on("activate").subscribe(() => {
+              setTimeout(() => {
+                console.log('background mode activate');
+                this.http.get(this.host2 + '/myHire_deleteTimeOutHires.php?hireNo=' + this.hireNo + '&state=driver').subscribe(data => {
+                  console.log(data);
+                  if (data['responce'] != 'error') {
+                    clearTimeout(this.pushTimeOut);
+                    this.deleteHire(this.hireNo, data['responce']);
+                  }
+                },
+                  (err) => {
+                    clearTimeout(this.pushTimeOut);
+                    let message = "Network error! Please check your internet connection.";
+                    this.toaster(message);
+                  });
+              }, 180000);
+            });
           }
         }
       ]
 
     });
     alert.present();
+  }
+
+  toaster(message) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
+  deleteHire(hireNo, driverId) {
+    this.http.get(this.host2 + '/myHire_rejectHire.php?hireNo=' + hireNo + '&driverId=' + driverId + '&state=delete').subscribe(data => {
+      console.log(data);
+    },
+      (err) => {
+        let message = "Network error! Please check your internet connection.";
+        this.toaster(message);
+      });
   }
 
   onClickNextField(type, data) {
@@ -242,7 +289,7 @@ export class SecondPage {
         let deviceToken = val;
         this.http.get(this.host + '/my3Wheel_passenger.php?pasngrName=' + this.hire.value["pasngr_name"] + '&pasngrPhone=' + this.hire.value["pasngr_phone"] + '&pickupLocation=' + this.hire.value["pickup_location"] + '&destination=' + this.hire.value["destination"] + '&pickupDate=' + this.hire.value["pickup_date"] + '&pickupTime=' + pTime + '&driverId=' + this.driverId + '&deviceToken=' + deviceToken).subscribe(data => {
           console.log(data["response"]);
-          let hireNo = data["hireNo"];
+          this.hireNo = data["hireNo"];
           this.showAlert();
         });
       });

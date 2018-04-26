@@ -9,6 +9,7 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -51,6 +52,7 @@ import { ViewConfirmedHiresPage } from '../pages/view-confirmed-hires/view-confi
     LocalNotifications,
     LocationAccuracy,
     Geolocation,
+    BackgroundMode,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
