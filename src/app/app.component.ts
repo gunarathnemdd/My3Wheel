@@ -71,6 +71,9 @@ export class MyApp {
             alert.present();
           }
         }
+        else {
+          nav.pop();
+        }
       });
     });
   }
