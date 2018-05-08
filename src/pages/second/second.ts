@@ -10,13 +10,6 @@ import { HomePage } from '../home/home';
 import { ThirdPage } from '../../pages/third/third';
 import { ForthPage } from '../../pages/forth/forth';
 
-/**
- * Generated class for the SecondPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
   selector: 'page-second',
@@ -283,7 +276,13 @@ export class SecondPage {
   }
 
   getHire() {
-    if (this.hire["valid"]) {
+    if (this.hire.value["pickup_location"] == this.hire.value["destination"]) {
+      this.valueDestination = document.getElementById("inputPdestination");
+      this.destinationPlaceholder = "Destination can't be same";
+      this.inputDestination.style.border = '1px solid red';
+      this.hire["controls"]["destination"].reset();
+    }
+    else if (this.hire["valid"]) {
       let pTime = moment(this.hire.value["pickup_time"], "hh:mm").format("hh:mm a");
       this.storage.get('deviceToken').then((val) => {
         let deviceToken = val;

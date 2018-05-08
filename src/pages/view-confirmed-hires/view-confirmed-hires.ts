@@ -53,7 +53,8 @@ export class ViewConfirmedHiresPage {
   }
 
   previousPage() {
-    this.navCtrl.setRoot(HomePage);
+    //this.navCtrl.setRoot(HomePage);
+    this.navCtrl.pop();
   }
 
   showHire(item) {
