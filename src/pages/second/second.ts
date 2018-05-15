@@ -78,7 +78,10 @@ export class SecondPage {
   host2 = 'http://www.my3wheel.lk/php/myHire';
 
   public pushTimeOut: any;
+  public timeOut: any;
   public hireNo: any;
+
+  public alert: any;
 
   constructor(
     public alertCtrl: AlertController,
@@ -112,14 +115,50 @@ export class SecondPage {
       pickup_date: new FormControl('', Validators.compose([Validators.required])),
       pickup_time: new FormControl('', Validators.compose([Validators.required]))
     });
+
+    this.backgroundMode.enable();
+    this.backgroundMode.on("activate").subscribe(() => {
+      console.log('enabled');
+      this.navCtrl.setRoot(HomePage);
+      let navTransition = this.alert.dismiss();
+      navTransition.then(() => {
+        this.timeOutDelete(60000);
+      });
+    });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SecondPage , AuthServicesProvider');
   }
 
+  timeOutDelete(time) {
+    this.pushTimeOut = setTimeout(() => {
+      this.http.get(this.host2 + '/myHire_deleteTimeOutHires.php?hireNo=' + this.hireNo + '&state=driver').subscribe(data => {
+        console.log(data);
+        if (data['responce'] != 'error') {
+          clearTimeout(this.pushTimeOut);
+          this.deleteHire(this.hireNo, data['responce']);
+        }
+      },
+        (err) => {
+          clearTimeout(this.pushTimeOut);
+          let message = "Network error! Please check your internet connection.";
+          this.toaster(message);
+        });
+    }, time);
+  }
+
+  backGroundService(time) {
+    this.navCtrl.setRoot(HomePage);
+    this.backgroundMode.enable();
+    this.backgroundMode.moveToBackground();
+    this.backgroundMode.on("activate").subscribe(() => {
+      this.timeOutDelete(time);
+    });
+  }
+
   showAlert() {
-    let alert = this.alertCtrl.create({
+    this.alert = this.alertCtrl.create({
       title: 'Successfully Sent!',
       subTitle: 'Request has been sent successfully, You will receive a reply in next 3 minutes!',
       enableBackdropDismiss: false,
@@ -128,32 +167,26 @@ export class SecondPage {
           text: 'OK',
           handler: () => {
             //this.platform.exitApp();
-            this.navCtrl.setRoot(HomePage);
-            this.backgroundMode.enable();
-            this.backgroundMode.moveToBackground();
-            this.backgroundMode.on("activate").subscribe(() => {
-              setTimeout(() => {
-                console.log('background mode activate');
-                this.http.get(this.host2 + '/myHire_deleteTimeOutHires.php?hireNo=' + this.hireNo + '&state=driver').subscribe(data => {
-                  console.log(data);
-                  if (data['responce'] != 'error') {
-                    clearTimeout(this.pushTimeOut);
-                    this.deleteHire(this.hireNo, data['responce']);
-                  }
-                },
-                  (err) => {
-                    clearTimeout(this.pushTimeOut);
-                    let message = "Network error! Please check your internet connection.";
-                    this.toaster(message);
-                  });
-              }, 180000);
+            let navTransition = this.alert.dismiss();
+            navTransition.then(() => {
+              this.backGroundService(60000);
             });
+            return false;
           }
         }
       ]
-
     });
-    alert.present();
+    let alertPresent = this.alert.present();
+    alertPresent.then(() => {
+      this.timeOut = setTimeout(() => {
+        let navTransition = this.alert.dismiss();
+        navTransition.then(() => {
+          this.backGroundService(57000);
+        });
+        clearTimeout(this.timeOut);
+        return false;
+      }, 3000);
+    });
   }
 
   toaster(message) {
@@ -221,7 +254,7 @@ export class SecondPage {
     }
     else if ((this.hire["controls"]["pasngr_phone"].hasError('minlength')) || (this.hire["controls"]["pasngr_phone"].hasError('maxlength'))) {
       this.valuePhone = document.getElementById("inputPphone");
-      this.phoneNumberPlaceholder = "Length shoud be 9 or 10";
+      this.phoneNumberPlaceholder = "Length should be 9 or 10";
       this.inputPhone.style.border = '1px solid red';
       this.hire["controls"]["pasngr_phone"].reset();
     }
@@ -257,7 +290,7 @@ export class SecondPage {
     }
     else if (this.hire["controls"]["destination"].hasError('required')) {
       this.valueDestination = document.getElementById("inputPdestination");
-      this.destinationPlaceholder = "Pleas enter destination";
+      this.destinationPlaceholder = "Please enter destination";
       this.inputDestination.style.border = '1px solid red';
       this.hire["controls"]["destination"].reset();
     }
@@ -289,8 +322,14 @@ export class SecondPage {
         this.http.get(this.host + '/my3Wheel_passenger.php?pasngrName=' + this.hire.value["pasngr_name"] + '&pasngrPhone=' + this.hire.value["pasngr_phone"] + '&pickupLocation=' + this.hire.value["pickup_location"] + '&destination=' + this.hire.value["destination"] + '&pickupDate=' + this.hire.value["pickup_date"] + '&pickupTime=' + pTime + '&driverId=' + this.driverId + '&deviceToken=' + deviceToken).subscribe(data => {
           console.log(data["response"]);
           this.hireNo = data["hireNo"];
+          this.storage.set('backgroundMode', true);
+          this.storage.set('backgroundModeOn', true);
           this.showAlert();
-        });
+        },
+          (err) => {
+            let message = "Network error! Please check your internet connection.";
+            this.toaster(message);
+          });
       });
     }
     else {

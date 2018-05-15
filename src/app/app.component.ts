@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { App, Platform, AlertController } from 'ionic-angular';
+import { App, Platform, AlertController, ToastController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
@@ -13,10 +13,15 @@ import { HomePage } from '../pages/home/home';
 export class MyApp {
   rootPage: any = HomePage;
 
+  public lastBack: any = Date.now();
+  public allowClose: boolean = false;
+  public translate: any;
+
   constructor(
     platform: Platform,
     statusBar: StatusBar,
     splashScreen: SplashScreen,
+    public toastCtrl: ToastController,
     private backgroundMode: BackgroundMode,
     public app: App,
     public alertCtrl: AlertController,
@@ -40,39 +45,66 @@ export class MyApp {
         }
       });
 
+      // platform.registerBackButtonAction(() => {
+
+      //   let nav = app.getActiveNavs()[0];
+      //   let activeView = nav.getActive();
+
+      //   if (activeView.name === "HomePage") {
+      //     if (nav.canGoBack()) { //Can we go back?
+      //       nav.pop();
+      //     } else {
+      //       const alert = this.alertCtrl.create({
+      //         title: 'App Termination',
+      //         subTitle: 'Do you really want to close the app?',
+      //         buttons: [{
+      //           text: 'Cancel',
+      //           role: 'cancel',
+      //           handler: () => {
+      //             console.log('Application exit prevented!');
+      //           }
+      //         }, {
+      //           text: 'Close App',
+      //           handler: () => {
+      //             //platform.exitApp(); // Close this application
+      //             this.backgroundMode.enable();
+      //             this.backgroundMode.moveToBackground();
+      //           }
+      //         }]
+      //       });
+      //       alert.present();
+      //     }
+      //   }
+      // });
+
       platform.registerBackButtonAction(() => {
-
-        let nav = app.getActiveNavs()[0];
-        let activeView = nav.getActive();
-
+        const overlay = this.app._appRoot._overlayPortal._views[0];//getActive();
+        const nav = app.getActiveNavs()[0];
+        const activeView = nav.getActive();
+        const closeDelay = 2000;
+        const spamDelay = 500;
         if (activeView.name === "HomePage") {
-
-          if (nav.canGoBack()) { //Can we go back?
+          if (overlay && overlay.dismiss) {
+            overlay.dismiss();
+          } else if (nav.canGoBack()) {
             nav.pop();
-          } else {
-            const alert = this.alertCtrl.create({
-              title: 'App Termination',
-              subTitle: 'Do you really want to close the app?',
-              buttons: [{
-                text: 'Cancel',
-                role: 'cancel',
-                handler: () => {
-                  console.log('Application exit prevented!');
-                }
-              }, {
-                text: 'Close App',
-                handler: () => {
-                  //platform.exitApp(); // Close this application
-                  this.backgroundMode.enable();
-                  this.backgroundMode.moveToBackground();
-                }
-              }]
+          } else if (Date.now() - this.lastBack > spamDelay && !this.allowClose) {
+            this.allowClose = true;
+            let toast = this.toastCtrl.create({
+              message: "Press BACK again to exit",
+              duration: closeDelay,
+              dismissOnPageChange: true
             });
-            alert.present();
+            toast.onDidDismiss(() => {
+              this.allowClose = false;
+            });
+            toast.present();
+          } else if (Date.now() - this.lastBack < closeDelay && this.allowClose) {
+            //platform.exitApp();
+            this.backgroundMode.enable();
+            this.backgroundMode.moveToBackground();
           }
-        }
-        else {
-          nav.pop();
+          this.lastBack = Date.now();
         }
       });
     });
