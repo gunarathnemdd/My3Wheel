@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { App } from 'ionic-angular';
 import { BackgroundMode } from '@ionic-native/background-mode';
+import { Storage } from '@ionic/storage';
 
 import { HomePage } from '../home/home';
 
@@ -36,6 +37,7 @@ export class ThirdPage {
   host = 'http://www.my3wheel.lk/php/my3Wheel';
 
   constructor(
+    private storage: Storage,
     private backgroundMode: BackgroundMode,
     public navCtrl: NavController,
     public app: App,
@@ -55,19 +57,26 @@ export class ThirdPage {
     this.http.get(this.host + '/my3Wheel_riderReject.php?hireNo=' + this.hireNo + '&driverId=' + this.driverId + '&state=reject').subscribe(data => {
       console.log(data);
       if (data['response'] == 'deleted') {
+        this.storage.set('backgroundMode', false);
+        this.storage.set('backgroundModeOn', false);
         this.navCtrl.setRoot(HomePage);
         this.toaster('Hire rejected successfully!');
       }
       else if (data['response'] == 'already deleted') {
+        this.storage.set('backgroundMode', false);
+        this.storage.set('backgroundModeOn', false);
         this.navCtrl.setRoot(HomePage);
         this.toaster("Hire is already deleted due to time out.");
       }
       else {
-        this.navCtrl.setRoot(HomePage);
         let message2 = "Network error! Please check your internet connection.";
         this.toaster(message2);
       }
-    })
+    },
+      (err) => {
+        let message2 = "Network error! Please check your internet connection.";
+        this.toaster(message2);
+      })
   }
 
   exitApp() {
@@ -77,20 +86,29 @@ export class ThirdPage {
       if (data['response'] == 'confirmed') {
         //document.getElementById("exitNote").innerHTML = "Have a safe journey";
         //this.platform.exitApp();
-        this.navCtrl.setRoot(HomePage);
+        this.storage.set('backgroundMode', false);
+        this.storage.set('backgroundModeOn', false);
         this.backgroundMode.enable();
+        this.backgroundMode.on("activate").subscribe(() => {
+          this.navCtrl.setRoot(HomePage);
+        });
         this.backgroundMode.moveToBackground();
       }
       else if (data['response'] == 'already deleted') {
+        this.storage.set('backgroundMode', false);
+        this.storage.set('backgroundModeOn', false);
         this.navCtrl.setRoot(HomePage);
         this.toaster("Hire is already deleted due to time out.");
       }
       else {
-        this.navCtrl.setRoot(HomePage);
         let message2 = "Network error! Please check your internet connection.";
         this.toaster(message2);
       }
-    })
+    },
+      (err) => {
+        let message2 = "Network error! Please check your internet connection.";
+        this.toaster(message2);
+      })
   }
 
   ionViewDidLoad() {
@@ -119,12 +137,12 @@ export class ThirdPage {
   }
 
   deleteHire(hireNo, driverId) {
-		this.http.get(this.host + '/myHire_rejectHire.php?hireNo=' + hireNo + '&driverId=' + driverId + '&state=delete').subscribe(data => {
-			console.log(data);
-		},
-			(err) => {
-				let message = "Network error! Please check your internet connection.";
-				this.toaster(message);
-			});
-	}
+    this.http.get(this.host + '/myHire_rejectHire.php?hireNo=' + hireNo + '&driverId=' + driverId + '&state=delete').subscribe(data => {
+      console.log(data);
+    },
+      (err) => {
+        let message = "Network error! Please check your internet connection.";
+        this.toaster(message);
+      });
+  }
 }

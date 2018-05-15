@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Platform, NavController, LoadingController, AlertController, ToastController } from 'ionic-angular';
+import { Platform, NavController, NavParams, LoadingController, AlertController, ToastController } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -45,9 +45,14 @@ export class HomePage {
 
 	public globalArray: any[] = [];
 	public showMyHireBtn: boolean;
+	public deviceToken: any;
+	public isBackgroundMode: boolean;
+	public isBackgroundModeOn: boolean;
+
 
 	constructor(
 		public platform: Platform,
+		public navParams: NavParams,
 		private storage: Storage,
 		private push: Push,
 		public loadingCtrl: LoadingController,
@@ -62,6 +67,14 @@ export class HomePage {
 		platform.ready().then(() => {
 			this.initPushNotification();
 		});
+		this.storage.get('deviceToken').then((val) => {
+			this.deviceToken = val;
+		});
+		this.storage.forEach((value, key, index) => {
+			if (key == "deviceToken") { this.deviceToken = value; }
+			else if (key == "backgroundMode") { this.isBackgroundMode = value; }
+			else if (key == "backgroundModeOn") { this.isBackgroundModeOn = value; }
+		})
 	}
 
 	initPushNotification() {
@@ -101,21 +114,25 @@ export class HomePage {
 						text: 'View',
 						handler: () => {
 							//TODO: Your logic here
-							if (data.title == "Hire Confirmed") {
-								this.navCtrl.push(ThirdPage, {
-									hireNo: data.additionalData['subtitle']
-								});
-							}
-							else if (data.title == "Hire Rejected") {
-								this.navCtrl.push(ForthPage, {
-									hireNo: data.additionalData['subtitle']
-								});
-							}
-							else if (data.title == "View Hire") {
-								console.log("view-confirmed-hires");
-								this.navCtrl.push(ViewConfirmedHiresPage);
-							}
-							console.log('Push notification received');
+							let navTransition = confirmAlert.dismiss();
+							navTransition.then(() => {
+								if (data.title == "Hire Confirmed") {
+									this.navCtrl.push(ThirdPage, {
+										hireNo: data.additionalData['subtitle']
+									});
+								}
+								else if (data.title == "Hire Rejected") {
+									this.navCtrl.push(ForthPage, {
+										hireNo: data.additionalData['subtitle']
+									});
+								}
+								else if (data.title == "View Hire") {
+									console.log("view-confirmed-hires");
+									this.navCtrl.push(ViewConfirmedHiresPage);
+								}
+								console.log('Push notification received');
+							});
+							return true;
 						}
 					}]
 				});
@@ -175,6 +192,12 @@ export class HomePage {
 		console.log('ionViewDidLoad HomePage');
 		this.splashScreen.hide();
 		this.storage.get('isLoaded').then((val) => {
+			// if ((this.isBackgroundMode == true) && (this.isBackgroundModeOn == true)) {
+			// 	this.globalArray.push({ name: "activeHire" });
+			// 	this.showMyHireBtn = false;
+			// 	this.refresherEnabled = true;
+			// }
+			// else 
 			if (val == "loaded") {
 				this.getDriverList();
 				this.showMyHireBtn = false;
@@ -197,49 +220,55 @@ export class HomePage {
 		});
 		this.loading.present();
 		this.globalArray = [];
-		this.storage.get('deviceToken').then((val) => {
-			this.http.get(this.host + '/my3Wheel_unconfirmedHires.php?deviceToken=' + val).subscribe(data => {
-				if (data == "no hires") {
-					this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((position) => {
-						this.longitude = position['coords']['longitude'];
-						this.latitude = position['coords']['latitude'];
-						this.http.get(this.host + '/my3Wheel_getDriverDistance.php?longitude=' + this.longitude + '&latitude=' + this.latitude).subscribe(location => {
-							console.log(location);
+		//this.storage.get('deviceToken').then((val) => {
+		this.http.get(this.host + '/my3Wheel_unconfirmedHires.php?deviceToken=' + this.deviceToken).subscribe(data => {
+			if (data == "no hires") {
+				this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((position) => {
+					this.longitude = position['coords']['longitude'];
+					this.latitude = position['coords']['latitude'];
+					this.http.get(this.host + '/my3Wheel_getDriverDistance.php?longitude=' + this.longitude + '&latitude=' + this.latitude).subscribe(location => {
+						console.log(location);
+						this.loading.dismiss();
+						if (location != "No results") {
+							console.log(Object.keys(location).length);
+							for (let i = 0; i < Object.keys(location).length; i++) {
+								let image = "data:image/png;base64," + location[i]["DriverImage"];
+								this.globalArray.push({ name: location[i]["DriverName"], vehicleNo: location[i]["DriverVehicle"], distance: location[i]["DriverDistance"], time: location[i]["DriverTime"], drivrId: location[i]["DriverID"], dImage: image });
+							}
+						}
+						else {
+							console.log('location no');
+							this.globalArray.push({ name: "null" });
+						}
+					},
+						(err) => {
+							console.log(err);
+							this.globalArray.push({ name: "noNetwork" });
 							this.loading.dismiss();
-							if (location != "No results") {
-								console.log(Object.keys(location).length);
-								for (let i = 0; i < Object.keys(location).length; i++) {
-									let image = "data:image/png;base64," + location[i]["DriverImage"];
-									this.globalArray.push({ name: location[i]["DriverName"], vehicleNo: location[i]["DriverVehicle"], distance: location[i]["DriverDistance"], time: location[i]["DriverTime"], drivrId: location[i]["DriverID"], dImage: image });
-								}
-							}
-							else {
-								console.log('location no');
-								this.globalArray.push({ name: "null" });
-							}
-						},
-							(err) => {
-								console.log(err);
-								this.globalArray.push({ name: "null" });
-								this.loading.dismiss();
-							});
-					});
-				}
-				else {
-					this.globalArray.push({ name: "activeHire" });
-					this.loading.dismiss();
-				}
-			},
-				(err) => {
-					console.log(err);
-					this.globalArray.push({ name: "null" });
-					this.loading.dismiss();
+							this.showMyHireBtn = true;
+							this.refresherEnabled = true;
+						});
 				});
-		}).catch(err => {
-			console.error();
-			this.globalArray.push({ name: "null" });
-			this.loading.dismiss();
-		});
+			}
+			else {
+				this.globalArray.push({ name: "activeHire" });
+				this.loading.dismiss();
+				this.showMyHireBtn = false;
+				this.refresherEnabled = true;
+			}
+		},
+			(err) => {
+				console.log(err);
+				this.globalArray.push({ name: "noNetwork" });
+				this.loading.dismiss();
+				this.showMyHireBtn = true;
+				this.refresherEnabled = true;
+			});
+		// }).catch(err => {
+		// 	console.error();
+		// 	this.globalArray.push({ name: "null" });
+		// 	this.loading.dismiss();
+		// });
 	}
 
 	confirmedHire() {

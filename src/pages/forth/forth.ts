@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
+import { Storage } from '@ionic/storage';
 
 import { HomePage } from '../home/home';
 /**
@@ -29,6 +30,7 @@ export class ForthPage {
 	host = 'http://www.my3wheel.lk/php/my3Wheel';
 
 	constructor(
+		private storage: Storage,
 		public navCtrl: NavController,
 		public app: App,
 		public navParams: NavParams,
@@ -39,6 +41,8 @@ export class ForthPage {
 	}
 
 	goHome() {
+        this.storage.set('backgroundMode', false);
+		this.storage.set('backgroundModeOn', false);
 		this.navCtrl.setRoot(HomePage);
 	}
 
