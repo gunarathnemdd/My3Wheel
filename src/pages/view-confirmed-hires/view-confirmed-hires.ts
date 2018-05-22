@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { NavController, NavParams, ModalController, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { orderBy, filter } from 'lodash';
@@ -7,6 +6,7 @@ import moment from 'moment';
 
 import { HomePage } from '../home/home';
 import { SelectConfirmedHirePage } from '../select-confirmed-hire/select-confirmed-hire';
+import { HttpServicesProvider } from '../../providers/http-services/http-services';
 
 @Component({
   selector: 'page-view-confirmed-hires',
@@ -14,7 +14,6 @@ import { SelectConfirmedHirePage } from '../select-confirmed-hire/select-confirm
 })
 export class ViewConfirmedHiresPage {
 
-  public host = 'http://www.my3wheel.lk/php/my3Wheel';
   public globalArray: any[] = [];
   public hire: any;
 
@@ -22,15 +21,16 @@ export class ViewConfirmedHiresPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private storage: Storage,
-    public http: HttpClient,
+    public service: HttpServicesProvider,
     public toastCtrl: ToastController,
     public modalCtrl: ModalController) {
   }
 
   ionViewDidLoad() {
+    this.storage.set('backgroundMode', false);
     console.log('ionViewDidLoad ViewConfirmedHiresPage');
     this.storage.get('deviceToken').then((val) => {
-      this.http.get(this.host + '/my3Wheel_availableHire.php?deviceToken=' + val).subscribe(data => {
+      this.service.confirmedHire(val).subscribe(data => {
         console.log(data);
         if (data != '0') {
           this.hire = data;

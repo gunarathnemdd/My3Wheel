@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Platform, NavController, NavParams, LoadingController, AlertController, ToastController } from 'ionic-angular';
-import { HttpClient } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
@@ -14,6 +13,7 @@ import { SecondPage } from '../second/second';
 import { ThirdPage } from '../../pages/third/third';
 import { ForthPage } from '../../pages/forth/forth';
 import { ViewConfirmedHiresPage } from '../view-confirmed-hires/view-confirmed-hires';
+import { HttpServicesProvider } from '../../providers/http-services/http-services';
 
 @Component({
 	selector: 'page-home',
@@ -41,8 +41,6 @@ export class HomePage {
 	public loading: any;
 	public refresherEnabled: any;
 
-	host = 'http://www.my3wheel.lk/php/my3Wheel';
-
 	public globalArray: any[] = [];
 	public showMyHireBtn: boolean;
 	public deviceToken: any;
@@ -59,21 +57,18 @@ export class HomePage {
 		public splashScreen: SplashScreen,
 		private backgroundMode: BackgroundMode,
 		public localNotifications: LocalNotifications,
-		public http: HttpClient,
 		public navCtrl: NavController,
 		private geolocation: Geolocation,
 		public toastCtrl: ToastController,
-		public alertCtrl: AlertController) {
+		public alertCtrl: AlertController,
+		public service: HttpServicesProvider) {
 		platform.ready().then(() => {
 			this.initPushNotification();
 		});
-		this.storage.get('deviceToken').then((val) => {
-			this.deviceToken = val;
-		});
+		
 		this.storage.forEach((value, key, index) => {
 			if (key == "deviceToken") { this.deviceToken = value; }
 			else if (key == "backgroundMode") { this.isBackgroundMode = value; }
-			else if (key == "backgroundModeOn") { this.isBackgroundModeOn = value; }
 		})
 	}
 
@@ -153,6 +148,7 @@ export class HomePage {
 					});
 				}
 				else if (data.title == "View Hire") {
+					this.storage.set('backgroundMode', true);
 					this.backgroundMode.moveToForeground();
 					console.log("view-confirmed-hires");
 					this.navCtrl.push(ViewConfirmedHiresPage);
@@ -192,13 +188,12 @@ export class HomePage {
 		console.log('ionViewDidLoad HomePage');
 		this.splashScreen.hide();
 		this.storage.get('isLoaded').then((val) => {
-			// if ((this.isBackgroundMode == true) && (this.isBackgroundModeOn == true)) {
-			// 	this.globalArray.push({ name: "activeHire" });
-			// 	this.showMyHireBtn = false;
-			// 	this.refresherEnabled = true;
-			// }
-			// else 
-			if (val == "loaded") {
+			if (this.isBackgroundMode == true) {
+				this.globalArray.push({ name: "activeHire" });
+				this.showMyHireBtn = false;
+				this.refresherEnabled = true;
+			}
+			else if (val == "loaded") {
 				this.getDriverList();
 				this.showMyHireBtn = false;
 				this.refresherEnabled = true;
@@ -221,12 +216,12 @@ export class HomePage {
 		this.loading.present();
 		this.globalArray = [];
 		//this.storage.get('deviceToken').then((val) => {
-		this.http.get(this.host + '/my3Wheel_unconfirmedHires.php?deviceToken=' + this.deviceToken).subscribe(data => {
+		this.service.unconfirmedHires(this.deviceToken).subscribe(data => {
 			if (data == "no hires") {
 				this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((position) => {
 					this.longitude = position['coords']['longitude'];
 					this.latitude = position['coords']['latitude'];
-					this.http.get(this.host + '/my3Wheel_getDriverDistance.php?longitude=' + this.longitude + '&latitude=' + this.latitude).subscribe(location => {
+					this.service.driverDistance(this.longitude, this.latitude).subscribe(location => {
 						console.log(location);
 						this.loading.dismiss();
 						if (location != "No results") {
@@ -274,7 +269,7 @@ export class HomePage {
 	confirmedHire() {
 		console.log("confirmedHire");
 		this.storage.get('deviceToken').then((val) => {
-			this.http.get(this.host + '/my3Wheel_availableHire.php?deviceToken=' + val).subscribe(data => {
+			this.service.confirmedHire(val).subscribe(data => {
 				console.log(data);
 				if (data != '0') {
 					let hire = data;

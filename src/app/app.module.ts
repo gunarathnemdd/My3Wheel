@@ -10,6 +10,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation';
 import { BackgroundMode } from '@ionic-native/background-mode';
+import { CallNumber } from '@ionic-native/call-number';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -18,6 +19,7 @@ import { ThirdPage } from '../pages/third/third';
 import { ForthPage } from '../pages/forth/forth';
 import { SelectConfirmedHirePage } from '../pages/select-confirmed-hire/select-confirmed-hire';
 import { ViewConfirmedHiresPage } from '../pages/view-confirmed-hires/view-confirmed-hires';
+import { HttpServicesProvider } from '../providers/http-services/http-services';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,9 @@ import { ViewConfirmedHiresPage } from '../pages/view-confirmed-hires/view-confi
     LocationAccuracy,
     Geolocation,
     BackgroundMode,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    CallNumber,
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    HttpServicesProvider
   ]
 })
 export class AppModule {}

@@ -1,16 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
-import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { Storage } from '@ionic/storage';
 
 import { HomePage } from '../home/home';
-/**
- * Generated class for the ForthPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { HttpServicesProvider } from '../../providers/http-services/http-services';
 
 @IonicPage()
 @Component({
@@ -27,14 +21,12 @@ export class ForthPage {
 	public pickup_time: any;
 	public hireNo: any;
 
-	host = 'http://www.my3wheel.lk/php/my3Wheel';
-
 	constructor(
 		private storage: Storage,
 		public navCtrl: NavController,
 		public app: App,
 		public navParams: NavParams,
-		public http: HttpClient) {
+		public service: HttpServicesProvider) {
 
 		this.navParams = navParams
 		this.hireNo = navParams.get('hireNo');
@@ -48,7 +40,7 @@ export class ForthPage {
 
 	ionViewDidLoad() {
 		console.log('ionViewDidLoad ForthPage');
-		this.http.get(this.host + '/my3Wheel_isDriverConfirmed.php?hireNo=' + this.hireNo).subscribe(data => {
+		this.service.isDriverConfirmed(this.hireNo).subscribe(data => {
 			this.dri_name = data["displayName"];
 			this.vehicle_nu = data["vehicleNumber"];
 			this.pickup_location = data["journeyStart"];
