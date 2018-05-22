@@ -45,38 +45,6 @@ export class MyApp {
         }
       });
 
-      // platform.registerBackButtonAction(() => {
-
-      //   let nav = app.getActiveNavs()[0];
-      //   let activeView = nav.getActive();
-
-      //   if (activeView.name === "HomePage") {
-      //     if (nav.canGoBack()) { //Can we go back?
-      //       nav.pop();
-      //     } else {
-      //       const alert = this.alertCtrl.create({
-      //         title: 'App Termination',
-      //         subTitle: 'Do you really want to close the app?',
-      //         buttons: [{
-      //           text: 'Cancel',
-      //           role: 'cancel',
-      //           handler: () => {
-      //             console.log('Application exit prevented!');
-      //           }
-      //         }, {
-      //           text: 'Close App',
-      //           handler: () => {
-      //             //platform.exitApp(); // Close this application
-      //             this.backgroundMode.enable();
-      //             this.backgroundMode.moveToBackground();
-      //           }
-      //         }]
-      //       });
-      //       alert.present();
-      //     }
-      //   }
-      // });
-
       platform.registerBackButtonAction(() => {
         const overlay = this.app._appRoot._overlayPortal._views[0];//getActive();
         const nav = app.getActiveNavs()[0];

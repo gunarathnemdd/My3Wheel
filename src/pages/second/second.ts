@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform, AlertController, ToastController } from 'ionic-angular';
-import { HttpClient } from '@angular/common/http';
 import moment from 'moment';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Storage } from '@ionic/storage';
@@ -9,6 +8,7 @@ import { BackgroundMode } from '@ionic-native/background-mode';
 import { HomePage } from '../home/home';
 import { ThirdPage } from '../../pages/third/third';
 import { ForthPage } from '../../pages/forth/forth';
+import { HttpServicesProvider } from '../../providers/http-services/http-services';
 
 @IonicPage()
 @Component({
@@ -71,11 +71,8 @@ export class SecondPage {
   public phoneNumberPlaceholder: any = "Phone Number";
   public pickupLocationPlaceholder: any = "Pickup Location";
   public destinationPlaceholder: any = "Destination";
-  public datePlaceholder: any = "yyyy/mm/dd";
-  public timePlaceholder: any = "hh:mm";
-
-  host = 'http://www.my3wheel.lk/php/my3Wheel';
-  host2 = 'http://www.my3wheel.lk/php/myHire';
+  public dateplaceholder: any = "yyyy/mm/dd";
+  public timeplaceholder: any = "hh:mm";
 
   public pushTimeOut: any;
   public timeOut: any;
@@ -87,11 +84,11 @@ export class SecondPage {
     public alertCtrl: AlertController,
     public platform: Platform,
     public navCtrl: NavController,
-    public http: HttpClient,
     public toastCtrl: ToastController,
     public navParams: NavParams,
     private storage: Storage,
-    private backgroundMode: BackgroundMode) {
+    private backgroundMode: BackgroundMode,
+		public service: HttpServicesProvider) {
 
     this.platform = platform;
 
@@ -133,7 +130,7 @@ export class SecondPage {
 
   timeOutDelete(time) {
     this.pushTimeOut = setTimeout(() => {
-      this.http.get(this.host2 + '/myHire_deleteTimeOutHires.php?hireNo=' + this.hireNo + '&state=driver').subscribe(data => {
+      this.service.deleteTimeOutHires(this.hireNo).subscribe(data => {
         console.log(data);
         if (data['responce'] != 'error') {
           clearTimeout(this.pushTimeOut);
@@ -199,7 +196,7 @@ export class SecondPage {
   }
 
   deleteHire(hireNo, driverId) {
-    this.http.get(this.host2 + '/myHire_rejectHire.php?hireNo=' + hireNo + '&driverId=' + driverId + '&state=delete').subscribe(data => {
+    this.service.rejectHire(hireNo, driverId, 'delete').subscribe(data => {
       console.log(data);
     },
       (err) => {
@@ -258,6 +255,12 @@ export class SecondPage {
       this.inputPhone.style.border = '1px solid red';
       this.hire["controls"]["pasngr_phone"].reset();
     }
+    else if (this.hire["controls"]["pasngr_phone"].hasError('pattern')) {
+      this.valuePhone = document.getElementById("inputPphone");
+      this.phoneNumberPlaceholder = "Only numbers";
+      this.inputPhone.style.border = '1px solid red';
+      this.hire["controls"]["pasngr_phone"].reset();
+    }
     else if (this.hire["controls"]["pickup_location"].hasError('pattern')) {
       this.valueLocation = document.getElementById("inputPLocation");
       this.pickupLocationPlaceholder = "Only letters and spaces";
@@ -270,39 +273,45 @@ export class SecondPage {
       this.inputDestination.style.border = '1px solid red';
       this.hire["controls"]["destination"].reset();
     }
-    else if (this.hire["controls"]["pasngr_name"].hasError('required')) {
+    else if (this.hire["controls"]["pasngr_name"].hasError('required') || (this.hire["value"]["pasngr_name"].trim() == "")) {
+      //console.log(this.hire["controls"]["pasngr_name"].hasError('required'));
       this.valueName = document.getElementById("inputPname");
       this.namePlaceholder = "Please enter name";
       this.inputName.style.border = '1px solid red';
       this.hire["controls"]["pasngr_name"].reset();
     }
     else if (this.hire["controls"]["pasngr_phone"].hasError('required')) {
+      //console.log(this.hire["controls"]["pasngr_phone"].hasError('required'));
       this.valuePhone = document.getElementById("inputPphone");
       this.phoneNumberPlaceholder = "Please enter phone number";
       this.inputPhone.style.border = '1px solid red';
       this.hire["controls"]["pasngr_phone"].reset();
     }
-    else if (this.hire["controls"]["pickup_location"].hasError('required')) {
+    else if (this.hire["controls"]["pickup_location"].hasError('required') || (this.hire["value"]["pickup_location"].trim() == "")) {
+      //console.log(this.hire["controls"]["pickup_location"].hasError('required'));
       this.valueLocation = document.getElementById("inputPLocation");
       this.pickupLocationPlaceholder = "Please enter location";
       this.inputLocation.style.border = '1px solid red';
       this.hire["controls"]["pickup_location"].reset();
     }
-    else if (this.hire["controls"]["destination"].hasError('required')) {
+    else if (this.hire["controls"]["destination"].hasError('required') || (this.hire["value"]["destination"].trim() == "")) {
+      //console.log(this.hire["controls"]["destination"].hasError('required'));
       this.valueDestination = document.getElementById("inputPdestination");
       this.destinationPlaceholder = "Please enter destination";
       this.inputDestination.style.border = '1px solid red';
       this.hire["controls"]["destination"].reset();
     }
     else if (this.hire["controls"]["pickup_date"].hasError('required')) {
+      //console.log(this.hire["controls"]["pickup_date"].hasError('required'));
       this.valueDate = document.getElementById("inputPdate");
-      this.datePlaceholder = "Please enter date";
+      this.dateplaceholder = "please enter date";
       this.inputDate.style.border = '1px solid red';
       this.hire["controls"]["pickup_date"].reset();
     }
     else if (this.hire["controls"]["pickup_time"].hasError('required')) {
+      //console.log(this.hire["controls"]["pickup_time"].hasError('required'));
       this.valueTime = document.getElementById("inputPtime");
-      this.timePlaceholder = "Please enter time";
+      this.timeplaceholder = "please enter time";
       this.inputTime.style.border = '1px solid red';
       this.hire["controls"]["pickup_time"].reset();
     }
@@ -319,7 +328,7 @@ export class SecondPage {
       let pTime = moment(this.hire.value["pickup_time"], "hh:mm").format("hh:mm a");
       this.storage.get('deviceToken').then((val) => {
         let deviceToken = val;
-        this.http.get(this.host + '/my3Wheel_passenger.php?pasngrName=' + this.hire.value["pasngr_name"] + '&pasngrPhone=' + this.hire.value["pasngr_phone"] + '&pickupLocation=' + this.hire.value["pickup_location"] + '&destination=' + this.hire.value["destination"] + '&pickupDate=' + this.hire.value["pickup_date"] + '&pickupTime=' + pTime + '&driverId=' + this.driverId + '&deviceToken=' + deviceToken).subscribe(data => {
+        this.service.requestHire(this.hire.value["pasngr_name"].trim(), this.hire.value["pasngr_phone"], this.hire.value["pickup_location"].trim(), this.hire.value["destination"].trim(), this.hire.value["pickup_date"], pTime, this.driverId, deviceToken).subscribe(data => {
           console.log(data["response"]);
           this.hireNo = data["hireNo"];
           this.storage.set('backgroundMode', true);

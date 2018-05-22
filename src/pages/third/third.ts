@@ -1,19 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, Platform, NavParams, ToastController } from 'ionic-angular';
-import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { App } from 'ionic-angular';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { Storage } from '@ionic/storage';
 
 import { HomePage } from '../home/home';
-
-/**
- * Generated class for the ThirdPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { HttpServicesProvider } from '../../providers/http-services/http-services';
 
 @IonicPage()
 @Component({
@@ -34,8 +27,6 @@ export class ThirdPage {
   public mobile_nu: any;
   public pushTimeOut: any;
 
-  host = 'http://www.my3wheel.lk/php/my3Wheel';
-
   constructor(
     private storage: Storage,
     private backgroundMode: BackgroundMode,
@@ -44,7 +35,7 @@ export class ThirdPage {
     public platform: Platform,
     public navParams: NavParams,
     public toastCtrl: ToastController,
-    public http: HttpClient) {
+    public service: HttpServicesProvider) {
 
     this.platform = platform;
 
@@ -54,7 +45,7 @@ export class ThirdPage {
   }
 
   goHome() {
-    this.http.get(this.host + '/my3Wheel_riderReject.php?hireNo=' + this.hireNo + '&driverId=' + this.driverId + '&state=reject').subscribe(data => {
+    this.service.riderReject(this.hireNo, this.driverId, 'reject').subscribe(data => {
       console.log(data);
       if (data['response'] == 'deleted') {
         this.storage.set('backgroundMode', false);
@@ -81,7 +72,7 @@ export class ThirdPage {
 
   exitApp() {
     console.log(this.hireFee);
-    this.http.get(this.host + '/my3Wheel_riderConfirm.php?hireNo=' + this.hireNo + '&driverId=' + this.driverId + '&wheelFee=' + this.hireFee).subscribe(data => {
+    this.service.riderConfirm(this.hireNo, this.driverId, this.hireFee).subscribe(data => {
       console.log(data);
       if (data['response'] == 'confirmed') {
         //document.getElementById("exitNote").innerHTML = "Have a safe journey";
@@ -113,7 +104,7 @@ export class ThirdPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ThirdPage ' + this.hireNo);
-    this.http.get(this.host + '/my3Wheel_isDriverConfirmed.php?hireNo=' + this.hireNo).subscribe(data => {
+    this.service.isDriverConfirmed(this.hireNo).subscribe(data => {
       console.log(data);
       this.dri_name = data["displayName"];
       this.vehicle_nu = data["vehicleNumber"];
@@ -137,7 +128,7 @@ export class ThirdPage {
   }
 
   deleteHire(hireNo, driverId) {
-    this.http.get(this.host + '/myHire_rejectHire.php?hireNo=' + hireNo + '&driverId=' + driverId + '&state=delete').subscribe(data => {
+    this.service.rejectHire(hireNo, driverId, 'delete').subscribe(data => {
       console.log(data);
     },
       (err) => {

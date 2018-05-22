@@ -76,10 +76,10 @@
 
 				<ion-col>
 					<ion-input type="text" formControlName="pasngr_name" id="inputPname" class="inputFeilds" [placeholder]="namePlaceholder"
-					 (change)='onClickNextField("name", $event.target.value)'></ion-input>
+					 (change)='checkValidation()'></ion-input>
 				</ion-col>
 			</ion-row>
-			
+
 			<ion-row>
 				<ion-col class="inputNames" col-auto>
 					<ion-label class="input-label" fixed> Phone Number </ion-label>
@@ -87,7 +87,7 @@
 
 				<ion-col>
 					<ion-input type="number" formControlName="pasngr_phone" id="inputPphone" class="inputFeilds" [placeholder]="phoneNumberPlaceholder"
-					 (change)='onClickNextField("phoneNumber", $event.target.value)'></ion-input>
+					 (change)='checkValidation()'></ion-input>
 				</ion-col>
 			</ion-row>
 
@@ -98,7 +98,7 @@
 
 				<ion-col>
 					<ion-input type="text" formControlName="pickup_location" id="inputPLocation" class="inputFeilds" [placeholder]="pickupLocationPlaceholder"
-					 (change)='onClickNextField("pickLocation", $event.target.value)'></ion-input>
+					 (change)='checkValidation()'></ion-input>
 				</ion-col>
 			</ion-row>
 
@@ -109,7 +109,7 @@
 
 				<ion-col>
 					<ion-input type="text" formControlName="destination" id="inputPdestination" class="inputFeilds" [placeholder]="destinationPlaceholder"
-					 (change)='onClickNextField("destination", $event.target.value)'></ion-input>
+					 (change)='checkValidation()'></ion-input>
 				</ion-col>
 			</ion-row>
 
@@ -120,7 +120,7 @@
 
 				<ion-col center>
 					<ion-datetime [min]="minDate" [max]="maxDate" pickerFormat="YYYY/MM/DD" id="inputPdate" displayFormat="YYYY/MM/DD" formControlName="pickup_date"
-					 class="inputDateTime" [placeholder]="datePlaceholder" (ngModelChange)='onClickNextField2()'> </ion-datetime>
+					 class="inputDateTime" [placeholder]="dateplaceholder" (ngModelChange)='checkValidation()'> </ion-datetime>
 				</ion-col>
 			</ion-row>
 
@@ -131,7 +131,7 @@
 
 				<ion-col center>
 					<ion-datetime formControlName="pickup_time" id="inputPtime" displayFormat="hh:mm a" pickerFormat="hh:mm a" class="inputDateTime"
-					 [placeholder]="timePlaceholder" (ngModelChange)='onClickNextField3()'> </ion-datetime>
+					 [placeholder]="timeplaceholder" (ngModelChange)='checkValidation()'> </ion-datetime>
 				</ion-col>
 			</ion-row>
 
