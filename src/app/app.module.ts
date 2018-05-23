@@ -20,6 +20,7 @@ import { ForthPage } from '../pages/forth/forth';
 import { SelectConfirmedHirePage } from '../pages/select-confirmed-hire/select-confirmed-hire';
 import { ViewConfirmedHiresPage } from '../pages/view-confirmed-hires/view-confirmed-hires';
 import { HttpServicesProvider } from '../providers/http-services/http-services';
+import { AlertControllerProvider } from '../providers/alert-controller/alert-controller';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { HttpServicesProvider } from '../providers/http-services/http-services';
     BackgroundMode,
     CallNumber,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    HttpServicesProvider
+    HttpServicesProvider,
+    AlertControllerProvider
   ]
 })
 export class AppModule {}

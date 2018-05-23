@@ -9,6 +9,7 @@ import { HomePage } from '../home/home';
 import { ThirdPage } from '../../pages/third/third';
 import { ForthPage } from '../../pages/forth/forth';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
+import { AlertControllerProvider } from '../../providers/alert-controller/alert-controller';
 
 @IonicPage()
 @Component({
@@ -88,7 +89,8 @@ export class SecondPage {
     public navParams: NavParams,
     private storage: Storage,
     private backgroundMode: BackgroundMode,
-		public service: HttpServicesProvider) {
+    public service: HttpServicesProvider,
+    public alertService: AlertControllerProvider) {
 
     this.platform = platform;
 
@@ -126,21 +128,6 @@ export class SecondPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SecondPage , AuthServicesProvider');
-    this.inputName = document.querySelector('#inputPname');
-    this.inputPhone = document.querySelector('#inputPphone');
-    this.inputLocation = document.querySelector('#inputPLocation');
-    this.inputDestination = document.querySelector('#inputPdestination');
-    this.inputDate = document.querySelector('#inputPdate');
-    this.inputTime = document.querySelector('#inputPtime');
-
-    this.inputName.style.border = "1px solid #bebdbd";
-    this.inputPhone.style.border = "1px solid #bebdbd";
-    this.inputLocation.style.border = "1px solid #bebdbd";
-    this.inputDestination.style.border = "1px solid #bebdbd";
-    this.inputDate.style.border = "1px solid #bebdbd";
-    this.inputTime.style.border = "1px solid #bebdbd";
-
-    
   }
 
   timeOutDelete(time) {
@@ -221,8 +208,9 @@ export class SecondPage {
   }
 
   sliceInvalidPattern(event: any) {
+    this.inputPhone = document.querySelector('#inputPphone');
+    this.inputPhone.style.border = "1px solid #bebdbd";
     let MY_REGEXP = /^\d+$/;
-    let MAX_LENGTH = 10;
 
     let newValue = event.target.value;
     let regExp = new RegExp(MY_REGEXP);
@@ -233,19 +221,33 @@ export class SecondPage {
       this.inputPhone.style.border = '1px solid red';
       this.hire["controls"]["pasngr_phone"].reset();
     }
-    else if(this.hire["controls"]["pasngr_phone"].hasError('maxlength')) {
-      event.target.value = newValue.slice(0, MAX_LENGTH); 
+    else {
+      this.inputPhone.style.border = "1px solid #bebdbd";
     }
   }
 
   checkValidation() {
+    this.inputName = document.querySelector('#inputPname');
+    this.inputPhone = document.querySelector('#inputPphone');
+    this.inputLocation = document.querySelector('#inputPLocation');
+    this.inputDestination = document.querySelector('#inputPdestination');
+    this.inputDate = document.querySelector('#inputPdate');
+    this.inputTime = document.querySelector('#inputPtime');
+
+    this.inputName.style.border = "1px solid #bebdbd";
+    this.inputPhone.style.border = "1px solid #bebdbd";
+    this.inputLocation.style.border = "1px solid #bebdbd";
+    this.inputDestination.style.border = "1px solid #bebdbd";
+    this.inputDate.style.border = "1px solid #bebdbd";
+    this.inputTime.style.border = "1px solid #bebdbd";
+
     if (this.hire["controls"]["pasngr_name"].hasError('pattern')) {
       this.valueName = document.getElementById("inputPname");
       this.namePlaceholder = "Only letters and spaces";
       this.inputName.style.border = '1px solid red';
       this.hire["controls"]["pasngr_name"].reset();
     }
-    else if ((this.hire["controls"]["pasngr_phone"].hasError('minlength')) || (this.hire["controls"]["pasngr_phone"].hasError('maxlength'))) {
+    else if ((this.hire["controls"]["pasngr_phone"].hasError('minlength')) || (this.hire["controls"]["pasngr_phone"].hasError('maxlength'))) { 
       this.valuePhone = document.getElementById("inputPphone");
       this.phoneNumberPlaceholder = "Length should be 9 or 10";
       this.inputPhone.style.border = '1px solid red';

@@ -14,6 +14,7 @@ import { ThirdPage } from '../../pages/third/third';
 import { ForthPage } from '../../pages/forth/forth';
 import { ViewConfirmedHiresPage } from '../view-confirmed-hires/view-confirmed-hires';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
+import { AlertControllerProvider } from '../../providers/alert-controller/alert-controller';
 
 @Component({
 	selector: 'page-home',
@@ -61,11 +62,12 @@ export class HomePage {
 		private geolocation: Geolocation,
 		public toastCtrl: ToastController,
 		public alertCtrl: AlertController,
-		public service: HttpServicesProvider) {
+		public service: HttpServicesProvider,
+		public alertService: AlertControllerProvider) {
 		platform.ready().then(() => {
 			this.initPushNotification();
 		});
-		
+
 		this.storage.forEach((value, key, index) => {
 			if (key == "deviceToken") { this.deviceToken = value; }
 			else if (key == "backgroundMode") { this.isBackgroundMode = value; }
@@ -101,37 +103,61 @@ export class HomePage {
 			//if user using app and push notification comes
 			if (data.additionalData.foreground) {
 				// if application open, show popup
-				let confirmAlert = this.alertCtrl.create({
-					title: data.title,
-					subTitle: data.message,
-					enableBackdropDismiss: false,
-					buttons: [{
-						text: 'View',
-						handler: () => {
-							//TODO: Your logic here
-							let navTransition = confirmAlert.dismiss();
-							navTransition.then(() => {
-								if (data.title == "Hire Confirmed") {
-									this.navCtrl.push(ThirdPage, {
-										hireNo: data.additionalData['subtitle']
-									});
-								}
-								else if (data.title == "Hire Rejected") {
-									this.navCtrl.push(ForthPage, {
-										hireNo: data.additionalData['subtitle']
-									});
-								}
-								else if (data.title == "View Hire") {
-									console.log("view-confirmed-hires");
-									this.navCtrl.push(ViewConfirmedHiresPage);
-								}
-								console.log('Push notification received');
+				let title = data.title;
+				let message = data.message;
+				let buttons = [{
+					text: 'View',
+					handler: () => {
+						//TODO: Your logic here
+						if (data.title == "Hire Confirmed") {
+							this.navCtrl.push(ThirdPage, {
+								hireNo: data.additionalData['subtitle']
 							});
-							return true;
 						}
-					}]
-				});
-				confirmAlert.present();
+						else if (data.title == "Hire Rejected") {
+							this.navCtrl.push(ForthPage, {
+								hireNo: data.additionalData['subtitle']
+							});
+						}
+						else if (data.title == "View Hire") {
+							console.log("view-confirmed-hires");
+							this.navCtrl.push(ViewConfirmedHiresPage);
+						}
+						console.log('Push notification received');
+					}
+				}];
+				this.alertService.alertCtrlr(title, message, buttons);
+				// let confirmAlert = this.alertCtrl.create({
+				// 	title: data.title,
+				// 	subTitle: data.message,
+				// 	enableBackdropDismiss: false,
+				// 	buttons: [{
+				// 		text: 'View',
+				// 		handler: () => {
+				// 			//TODO: Your logic here
+				// 			let navTransition = confirmAlert.dismiss();
+				// 			navTransition.then(() => {
+				// 				if (data.title == "Hire Confirmed") {
+				// 					this.navCtrl.push(ThirdPage, {
+				// 						hireNo: data.additionalData['subtitle']
+				// 					});
+				// 				}
+				// 				else if (data.title == "Hire Rejected") {
+				// 					this.navCtrl.push(ForthPage, {
+				// 						hireNo: data.additionalData['subtitle']
+				// 					});
+				// 				}
+				// 				else if (data.title == "View Hire") {
+				// 					console.log("view-confirmed-hires");
+				// 					this.navCtrl.push(ViewConfirmedHiresPage);
+				// 				}
+				// 				console.log('Push notification received');
+				// 			});
+				// 			return true;
+				// 		}
+				// 	}]
+				// });  
+				// confirmAlert.present();
 			} else {
 				//if user NOT using app and push notification comes
 				//TODO: Your logic on click of push notification directly
@@ -280,13 +306,15 @@ export class HomePage {
 					else {
 						let title = "No Confirmed Hires!";
 						let message = "You don't have any confirmed hires at this moment.";
-						this.alert(title, message);
+						let buttons = [{ text: 'OK', role: 'cancel' }];
+						this.alertService.alertCtrlr(title, message, buttons);
 					}
 				}
 				else {
 					let title = "No Confirmed Hires!";
 					let message = "You don't have any confirmed hires at this moment.";
-					this.alert(title, message);
+					let buttons = [{ text: 'OK', role: 'cancel' }];
+					this.alertService.alertCtrlr(title, message, buttons);
 				}
 			},
 				(err) => {
@@ -305,18 +333,18 @@ export class HomePage {
 		toast.present();
 	}
 
-	alert(title, message) {
-		let alert = this.alertCtrl.create({
-			title: title,
-			subTitle: message,
-			enableBackdropDismiss: false,
-			buttons: [
-				{
-					text: 'OK',
-					role: 'cancel'
-				}
-			]
-		});
-		alert.present();
-	}
+	// alert(title, message) {
+	// 	let alert = this.alertCtrl.create({
+	// 		title: title,
+	// 		subTitle: message,
+	// 		enableBackdropDismiss: false,
+	// 		buttons: [
+	// 			{
+	// 				text: 'OK',
+	// 				role: 'cancel'
+	// 			}
+	// 		]
+	// 	});
+	// 	alert.present();
+	// }
 }
