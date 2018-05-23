@@ -227,7 +227,6 @@ export class SecondPage {
     let newValue = event.target.value;
     let regExp = new RegExp(MY_REGEXP);
     if (!regExp.test(newValue)) {
-      console.log('error');
       event.target.value = newValue.slice(0, -1);
       this.valuePhone = document.getElementById("inputPphone");
       this.phoneNumberPlaceholder = "Only numbers";
@@ -271,42 +270,36 @@ export class SecondPage {
       this.hire["controls"]["destination"].reset();
     }
     else if (this.hire["controls"]["pasngr_name"].hasError('required') || (this.hire["value"]["pasngr_name"].trim() == "")) {
-      //console.log(this.hire["controls"]["pasngr_name"].hasError('required'));
       this.valueName = document.getElementById("inputPname");
       this.namePlaceholder = "Please enter name";
       this.inputName.style.border = '1px solid red';
       this.hire["controls"]["pasngr_name"].reset();
     }
     else if (this.hire["controls"]["pasngr_phone"].hasError('required')) {
-      //console.log(this.hire["controls"]["pasngr_phone"].hasError('required'));
       this.valuePhone = document.getElementById("inputPphone");
       this.phoneNumberPlaceholder = "Please enter phone number";
       this.inputPhone.style.border = '1px solid red';
       this.hire["controls"]["pasngr_phone"].reset();
     }
     else if (this.hire["controls"]["pickup_location"].hasError('required') || (this.hire["value"]["pickup_location"].trim() == "")) {
-      //console.log(this.hire["controls"]["pickup_location"].hasError('required'));
       this.valueLocation = document.getElementById("inputPLocation");
       this.pickupLocationPlaceholder = "Please enter location";
       this.inputLocation.style.border = '1px solid red';
       this.hire["controls"]["pickup_location"].reset();
     }
     else if (this.hire["controls"]["destination"].hasError('required') || (this.hire["value"]["destination"].trim() == "")) {
-      //console.log(this.hire["controls"]["destination"].hasError('required'));
       this.valueDestination = document.getElementById("inputPdestination");
       this.destinationPlaceholder = "Please enter destination";
       this.inputDestination.style.border = '1px solid red';
       this.hire["controls"]["destination"].reset();
     }
     else if (this.hire["controls"]["pickup_date"].hasError('required')) {
-      //console.log(this.hire["controls"]["pickup_date"].hasError('required'));
       this.valueDate = document.getElementById("inputPdate");
       this.dateplaceholder = "please enter date";
       this.inputDate.style.border = '1px solid red';
       this.hire["controls"]["pickup_date"].reset();
     }
     else if (this.hire["controls"]["pickup_time"].hasError('required')) {
-      //console.log(this.hire["controls"]["pickup_time"].hasError('required'));
       this.valueTime = document.getElementById("inputPtime");
       this.timeplaceholder = "please enter time";
       this.inputTime.style.border = '1px solid red';
