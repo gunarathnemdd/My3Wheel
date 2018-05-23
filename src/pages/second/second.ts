@@ -126,6 +126,21 @@ export class SecondPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SecondPage , AuthServicesProvider');
+    this.inputName = document.querySelector('#inputPname');
+    this.inputPhone = document.querySelector('#inputPphone');
+    this.inputLocation = document.querySelector('#inputPLocation');
+    this.inputDestination = document.querySelector('#inputPdestination');
+    this.inputDate = document.querySelector('#inputPdate');
+    this.inputTime = document.querySelector('#inputPtime');
+
+    this.inputName.style.border = "1px solid #bebdbd";
+    this.inputPhone.style.border = "1px solid #bebdbd";
+    this.inputLocation.style.border = "1px solid #bebdbd";
+    this.inputDestination.style.border = "1px solid #bebdbd";
+    this.inputDate.style.border = "1px solid #bebdbd";
+    this.inputTime.style.border = "1px solid #bebdbd";
+
+    
   }
 
   timeOutDelete(time) {
@@ -205,44 +220,26 @@ export class SecondPage {
       });
   }
 
-  onClickNextField(type, data) {
-    if (type == "name") {
-      this.checkValidation();
-    }
-    else if (type == "phoneNumber") {
-      this.checkValidation();
-    }
-    else if (type == "pickLocation") {
-      this.checkValidation();
-    }
-    else if (type == "destination") {
-      this.checkValidation();
-    }
-  }
+  sliceInvalidPattern(event: any) {
+    let MY_REGEXP = /^\d+$/;
+    let MAX_LENGTH = 10;
 
-  onClickNextField2() {
-    this.checkValidation();
-  }
-
-  onClickNextField3() {
-    this.checkValidation();
+    let newValue = event.target.value;
+    let regExp = new RegExp(MY_REGEXP);
+    if (!regExp.test(newValue)) {
+      console.log('error');
+      event.target.value = newValue.slice(0, -1);
+      this.valuePhone = document.getElementById("inputPphone");
+      this.phoneNumberPlaceholder = "Only numbers";
+      this.inputPhone.style.border = '1px solid red';
+      this.hire["controls"]["pasngr_phone"].reset();
+    }
+    else if(this.hire["controls"]["pasngr_phone"].hasError('maxlength')) {
+      event.target.value = newValue.slice(0, MAX_LENGTH); 
+    }
   }
 
   checkValidation() {
-    this.inputName = document.querySelector('#inputPname');
-    this.inputPhone = document.querySelector('#inputPphone');
-    this.inputLocation = document.querySelector('#inputPLocation');
-    this.inputDestination = document.querySelector('#inputPdestination');
-    this.inputDate = document.querySelector('#inputPdate');
-    this.inputTime = document.querySelector('#inputPtime');
-
-    this.inputName.style.border = "1px solid #bebdbd";
-    this.inputPhone.style.border = "1px solid #bebdbd";
-    this.inputLocation.style.border = "1px solid #bebdbd";
-    this.inputDestination.style.border = "1px solid #bebdbd";
-    this.inputDate.style.border = "1px solid #bebdbd";
-    this.inputTime.style.border = "1px solid #bebdbd";
-
     if (this.hire["controls"]["pasngr_name"].hasError('pattern')) {
       this.valueName = document.getElementById("inputPname");
       this.namePlaceholder = "Only letters and spaces";

@@ -87,7 +87,7 @@
 
 				<ion-col>
 					<ion-input type="number" formControlName="pasngr_phone" id="inputPphone" class="inputFeilds" [placeholder]="phoneNumberPlaceholder"
-					 (change)='checkValidation()'></ion-input>
+					 (change)='checkValidation()' (keyup)="sliceInvalidPattern($event)"></ion-input>
 				</ion-col>
 			</ion-row>
 
