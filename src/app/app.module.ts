@@ -21,6 +21,7 @@ import { SelectConfirmedHirePage } from '../pages/select-confirmed-hire/select-c
 import { ViewConfirmedHiresPage } from '../pages/view-confirmed-hires/view-confirmed-hires';
 import { HttpServicesProvider } from '../providers/http-services/http-services';
 import { AlertControllerProvider } from '../providers/alert-controller/alert-controller';
+import { ToastControllerProvider } from '../providers/toast-controller/toast-controller';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { AlertControllerProvider } from '../providers/alert-controller/alert-con
     CallNumber,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     HttpServicesProvider,
-    AlertControllerProvider
+    AlertControllerProvider,
+    ToastControllerProvider
   ]
 })
 export class AppModule {}

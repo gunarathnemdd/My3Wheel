@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Platform, NavController, NavParams, LoadingController, AlertController, ToastController } from 'ionic-angular';
+import { Platform, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
@@ -15,6 +15,7 @@ import { ForthPage } from '../../pages/forth/forth';
 import { ViewConfirmedHiresPage } from '../view-confirmed-hires/view-confirmed-hires';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
 import { AlertControllerProvider } from '../../providers/alert-controller/alert-controller';
+import { ToastControllerProvider } from '../../providers/toast-controller/toast-controller';
 
 @Component({
 	selector: 'page-home',
@@ -60,8 +61,7 @@ export class HomePage {
 		public localNotifications: LocalNotifications,
 		public navCtrl: NavController,
 		private geolocation: Geolocation,
-		public toastCtrl: ToastController,
-		public alertCtrl: AlertController,
+		public toastService: ToastControllerProvider,
 		public service: HttpServicesProvider,
 		public alertService: AlertControllerProvider) {
 		platform.ready().then(() => {
@@ -174,7 +174,7 @@ export class HomePage {
 					});
 				}
 				else if (data.title == "View Hire") {
-					this.storage.set('backgroundMode', true);
+					//this.storage.set('backgroundMode', true);
 					this.backgroundMode.moveToForeground();
 					console.log("view-confirmed-hires");
 					this.navCtrl.push(ViewConfirmedHiresPage);
@@ -214,6 +214,7 @@ export class HomePage {
 		console.log('ionViewDidLoad HomePage');
 		this.splashScreen.hide();
 		this.storage.get('isLoaded').then((val) => {
+			console.log(this.isBackgroundMode);
 			if (this.isBackgroundMode == true) {
 				this.globalArray.push({ name: "activeHire" });
 				this.showMyHireBtn = false;
@@ -319,32 +320,9 @@ export class HomePage {
 			},
 				(err) => {
 					let message = "Network error! Please check your internet connection.";
-					this.toaster(message);
+					this.toastService.toastCtrlr(message);
 				});
 		});
 	}
 
-	toaster(message) {
-		let toast = this.toastCtrl.create({
-			message: message,
-			duration: 3000,
-			position: 'bottom'
-		});
-		toast.present();
-	}
-
-	// alert(title, message) {
-	// 	let alert = this.alertCtrl.create({
-	// 		title: title,
-	// 		subTitle: message,
-	// 		enableBackdropDismiss: false,
-	// 		buttons: [
-	// 			{
-	// 				text: 'OK',
-	// 				role: 'cancel'
-	// 			}
-	// 		]
-	// 	});
-	// 	alert.present();
-	// }
 }

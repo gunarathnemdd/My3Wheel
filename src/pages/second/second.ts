@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, AlertController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform, AlertController } from 'ionic-angular';
 import moment from 'moment';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Storage } from '@ionic/storage';
@@ -10,6 +10,7 @@ import { ThirdPage } from '../../pages/third/third';
 import { ForthPage } from '../../pages/forth/forth';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
 import { AlertControllerProvider } from '../../providers/alert-controller/alert-controller';
+import { ToastControllerProvider } from '../../providers/toast-controller/toast-controller';
 
 @IonicPage()
 @Component({
@@ -85,7 +86,7 @@ export class SecondPage {
     public alertCtrl: AlertController,
     public platform: Platform,
     public navCtrl: NavController,
-    public toastCtrl: ToastController,
+    public toastService: ToastControllerProvider,
     public navParams: NavParams,
     private storage: Storage,
     private backgroundMode: BackgroundMode,
@@ -142,7 +143,7 @@ export class SecondPage {
         (err) => {
           clearTimeout(this.pushTimeOut);
           let message = "Network error! Please check your internet connection.";
-          this.toaster(message);
+          this.toastService.toastCtrlr(message);
         });
     }, time);
   }
@@ -188,22 +189,13 @@ export class SecondPage {
     });
   }
 
-  toaster(message) {
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 3000,
-      position: 'bottom'
-    });
-    toast.present();
-  }
-
   deleteHire(hireNo, driverId) {
     this.service.rejectHire(hireNo, driverId, 'delete').subscribe(data => {
       console.log(data);
     },
       (err) => {
         let message = "Network error! Please check your internet connection.";
-        this.toaster(message);
+        this.toastService.toastCtrlr(message);
       });
   }
 
@@ -329,7 +321,7 @@ export class SecondPage {
         },
           (err) => {
             let message = "Network error! Please check your internet connection.";
-            this.toaster(message);
+            this.toastService.toastCtrlr(message);
           });
       });
     }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, Platform, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, Platform, NavParams } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import { App } from 'ionic-angular';
 import { BackgroundMode } from '@ionic-native/background-mode';
@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage';
 
 import { HomePage } from '../home/home';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
+import { ToastControllerProvider } from '../../providers/toast-controller/toast-controller';
 
 @IonicPage()
 @Component({
@@ -34,7 +35,7 @@ export class ThirdPage {
     public app: App,
     public platform: Platform,
     public navParams: NavParams,
-    public toastCtrl: ToastController,
+    public toastService: ToastControllerProvider,
     public service: HttpServicesProvider) {
 
     this.platform = platform;
@@ -51,22 +52,24 @@ export class ThirdPage {
         this.storage.set('backgroundMode', false);
         this.storage.set('backgroundModeOn', false);
         this.navCtrl.setRoot(HomePage);
-        this.toaster('Hire rejected successfully!');
+        let message = "Hire rejected successfully!";
+        this.toastService.toastCtrlr(message);
       }
       else if (data['response'] == 'already deleted') {
         this.storage.set('backgroundMode', false);
         this.storage.set('backgroundModeOn', false);
         this.navCtrl.setRoot(HomePage);
-        this.toaster("Hire is already deleted due to time out.");
+        let message = "Hire is already deleted due to time out.";
+        this.toastService.toastCtrlr(message);
       }
       else {
         let message2 = "Network error! Please check your internet connection.";
-        this.toaster(message2);
+        this.toastService.toastCtrlr(message2);
       }
     },
       (err) => {
         let message2 = "Network error! Please check your internet connection.";
-        this.toaster(message2);
+        this.toastService.toastCtrlr(message2);
       })
   }
 
@@ -89,16 +92,17 @@ export class ThirdPage {
         this.storage.set('backgroundMode', false);
         this.storage.set('backgroundModeOn', false);
         this.navCtrl.setRoot(HomePage);
-        this.toaster("Hire is already deleted due to time out.");
+        let message = "Hire is already deleted due to time out.";
+        this.toastService.toastCtrlr(message);
       }
       else {
         let message2 = "Network error! Please check your internet connection.";
-        this.toaster(message2);
+        this.toastService.toastCtrlr(message2);
       }
     },
       (err) => {
         let message2 = "Network error! Please check your internet connection.";
-        this.toaster(message2);
+        this.toastService.toastCtrlr(message2);
       })
   }
 
@@ -118,22 +122,13 @@ export class ThirdPage {
     });
   }
 
-  toaster(message) {
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 3000,
-      position: 'bottom'
-    });
-    toast.present();
-  }
-
   deleteHire(hireNo, driverId) {
     this.service.rejectHire(hireNo, driverId, 'delete').subscribe(data => {
       console.log(data);
     },
       (err) => {
         let message = "Network error! Please check your internet connection.";
-        this.toaster(message);
+        this.toastService.toastCtrlr(message);
       });
   }
 }

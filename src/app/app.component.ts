@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { App, Platform, AlertController, ToastController } from 'ionic-angular';
+import { App, Platform, ToastController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
@@ -24,7 +24,6 @@ export class MyApp {
     public toastCtrl: ToastController,
     private backgroundMode: BackgroundMode,
     public app: App,
-    public alertCtrl: AlertController,
     private locationAccuracy: LocationAccuracy,
     private geolocation: Geolocation) {
     platform.ready().then(() => {
