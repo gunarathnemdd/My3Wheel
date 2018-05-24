@@ -253,6 +253,7 @@ export class HomePage {
 						this.loading.dismiss();
 						if (location != "No results") {
 							console.log(Object.keys(location).length);
+							this.showMyHireBtn = false;
 							for (let i = 0; i < Object.keys(location).length; i++) {
 								let image = "data:image/png;base64," + location[i]["DriverImage"];
 								this.globalArray.push({ name: location[i]["DriverName"], vehicleNo: location[i]["DriverVehicle"], distance: location[i]["DriverDistance"], time: location[i]["DriverTime"], drivrId: location[i]["DriverID"], dImage: image });
@@ -260,6 +261,7 @@ export class HomePage {
 						}
 						else {
 							console.log('location no');
+							this.showMyHireBtn = false;
 							this.globalArray.push({ name: "null" });
 						}
 					},
