@@ -9,7 +9,6 @@ import { HomePage } from '../home/home';
 import { ThirdPage } from '../../pages/third/third';
 import { ForthPage } from '../../pages/forth/forth';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
-import { AlertControllerProvider } from '../../providers/alert-controller/alert-controller';
 import { ToastControllerProvider } from '../../providers/toast-controller/toast-controller';
 
 @IonicPage()
@@ -90,8 +89,7 @@ export class SecondPage {
     public navParams: NavParams,
     private storage: Storage,
     private backgroundMode: BackgroundMode,
-    public service: HttpServicesProvider,
-    public alertService: AlertControllerProvider) {
+    public service: HttpServicesProvider) {
 
     this.platform = platform;
 
