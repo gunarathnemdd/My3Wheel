@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { CallNumber } from '@ionic-native/call-number';
+import { AppVersion } from '@ionic-native/app-version';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -58,6 +59,7 @@ import { ToastControllerProvider } from '../providers/toast-controller/toast-con
     Geolocation,
     BackgroundMode,
     CallNumber,
+    AppVersion,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     HttpServicesProvider,
     AlertControllerProvider,

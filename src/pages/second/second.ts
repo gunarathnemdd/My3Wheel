@@ -148,7 +148,6 @@ export class SecondPage {
 
   backGroundService(time) {
     this.navCtrl.setRoot(HomePage);
-    this.backgroundMode.enable();
     this.backgroundMode.moveToBackground();
     this.backgroundMode.on("activate").subscribe(() => {
       this.timeOutDelete(time);

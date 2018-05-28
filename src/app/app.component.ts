@@ -5,8 +5,15 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { Geolocation } from '@ionic-native/geolocation';
 import { BackgroundMode } from '@ionic-native/background-mode';
+import { AppVersion } from '@ionic-native/app-version';
+import { Storage } from '@ionic/storage';
+import compareVersions from "compare-versions";
 
 import { HomePage } from '../pages/home/home';
+import { HttpServicesProvider } from '../providers/http-services/http-services';
+import { AlertControllerProvider } from '../providers/alert-controller/alert-controller';
+import { ToastControllerProvider } from '../providers/toast-controller/toast-controller';
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -22,10 +29,15 @@ export class MyApp {
     statusBar: StatusBar,
     splashScreen: SplashScreen,
     public toastCtrl: ToastController,
+    private appVersion: AppVersion,
+    private storage: Storage,
     private backgroundMode: BackgroundMode,
     public app: App,
+    public service: HttpServicesProvider,
+    public toastService: ToastControllerProvider,
     private locationAccuracy: LocationAccuracy,
-    private geolocation: Geolocation) {
+    private geolocation: Geolocation,
+    public alertService: AlertControllerProvider) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -42,6 +54,22 @@ export class MyApp {
             error => console.log('Error requesting location permissions', error)
           );
         }
+      });
+
+      this.service.versionCompare("My3Wheel").subscribe(data => {
+        let serverVersion = data['versionNo'];
+        this.appVersion.getVersionNumber().then((myAppVersion) => {
+          if (compareVersions(myAppVersion, serverVersion) == -1) {
+            this.storage.set('version', "old");
+          }
+          else {
+            this.storage.set('version', "latest");
+          }
+        },
+          (err) => {
+            let message = "Network error! Please check your internet connection.";
+            this.toastService.toastCtrlr(message);
+          });
       });
 
       platform.registerBackButtonAction(() => {

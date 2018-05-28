@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Platform, NavController, NavParams, LoadingController } from 'ionic-angular';
+import { Platform, NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
@@ -45,6 +45,7 @@ export class HomePage {
 
 	public globalArray: any[] = [];
 	public showMyHireBtn: boolean;
+	public version: any;
 	public deviceToken: any;
 	public isBackgroundMode: boolean;
 	public isBackgroundModeOn: boolean;
@@ -55,6 +56,7 @@ export class HomePage {
 		public navParams: NavParams,
 		private storage: Storage,
 		private push: Push,
+		public alertCtrl: AlertController,
 		public loadingCtrl: LoadingController,
 		public splashScreen: SplashScreen,
 		private backgroundMode: BackgroundMode,
@@ -71,6 +73,7 @@ export class HomePage {
 		this.storage.forEach((value, key, index) => {
 			if (key == "deviceToken") { this.deviceToken = value; }
 			else if (key == "backgroundMode") { this.isBackgroundMode = value; }
+			else if (key == "version") { this.version = value; }
 		})
 	}
 
@@ -220,6 +223,12 @@ export class HomePage {
 				this.showMyHireBtn = false;
 				this.refresherEnabled = true;
 			}
+			else if (this.version == "old") {
+				this.storage.set('isLoaded', "loaded");
+				this.showMyHireBtn = true;
+				this.refresherEnabled = false;
+				this.update();
+			}
 			else if (val == "loaded") {
 				this.getDriverList();
 				this.showMyHireBtn = false;
@@ -234,6 +243,23 @@ export class HomePage {
 				console.log("not loaded");
 			}
 		});
+	}
+
+	update() {
+		let confirmAlert = this.alertCtrl.create({
+			title: "Update!",
+			subTitle: "This app has a new version. Please uninstall this app and visit 'http://www.my3wheel.lk' then install new version.",
+			enableBackdropDismiss: false,
+			buttons: [{
+				text: 'OK',
+				handler: () => {
+					this.getDriverList();
+					this.showMyHireBtn = false;
+					this.refresherEnabled = true;
+				}
+			}]
+		});
+		confirmAlert.present();
 	}
 
 	getDriverList() {
