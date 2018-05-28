@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, AlertController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform, AlertController } from 'ionic-angular';
 import moment from 'moment';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Storage } from '@ionic/storage';
@@ -9,6 +9,7 @@ import { HomePage } from '../home/home';
 import { ThirdPage } from '../../pages/third/third';
 import { ForthPage } from '../../pages/forth/forth';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
+import { ToastControllerProvider } from '../../providers/toast-controller/toast-controller';
 
 @IonicPage()
 @Component({
@@ -84,11 +85,11 @@ export class SecondPage {
     public alertCtrl: AlertController,
     public platform: Platform,
     public navCtrl: NavController,
-    public toastCtrl: ToastController,
+    public toastService: ToastControllerProvider,
     public navParams: NavParams,
     private storage: Storage,
     private backgroundMode: BackgroundMode,
-		public service: HttpServicesProvider) {
+    public service: HttpServicesProvider) {
 
     this.platform = platform;
 
@@ -140,14 +141,13 @@ export class SecondPage {
         (err) => {
           clearTimeout(this.pushTimeOut);
           let message = "Network error! Please check your internet connection.";
-          this.toaster(message);
+          this.toastService.toastCtrlr(message);
         });
     }, time);
   }
 
   backGroundService(time) {
     this.navCtrl.setRoot(HomePage);
-    this.backgroundMode.enable();
     this.backgroundMode.moveToBackground();
     this.backgroundMode.on("activate").subscribe(() => {
       this.timeOutDelete(time);
@@ -186,46 +186,33 @@ export class SecondPage {
     });
   }
 
-  toaster(message) {
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 3000,
-      position: 'bottom'
-    });
-    toast.present();
-  }
-
   deleteHire(hireNo, driverId) {
     this.service.rejectHire(hireNo, driverId, 'delete').subscribe(data => {
       console.log(data);
     },
       (err) => {
         let message = "Network error! Please check your internet connection.";
-        this.toaster(message);
+        this.toastService.toastCtrlr(message);
       });
   }
 
-  onClickNextField(type, data) {
-    if (type == "name") {
-      this.checkValidation();
-    }
-    else if (type == "phoneNumber") {
-      this.checkValidation();
-    }
-    else if (type == "pickLocation") {
-      this.checkValidation();
-    }
-    else if (type == "destination") {
-      this.checkValidation();
-    }
-  }
+  sliceInvalidPattern(event: any) {
+    this.inputPhone = document.querySelector('#inputPphone');
+    this.inputPhone.style.border = "1px solid #bebdbd";
+    let MY_REGEXP = /^\d+$/;
 
-  onClickNextField2() {
-    this.checkValidation();
-  }
-
-  onClickNextField3() {
-    this.checkValidation();
+    let newValue = event.target.value;
+    let regExp = new RegExp(MY_REGEXP);
+    if (!regExp.test(newValue)) {
+      event.target.value = newValue.slice(0, -1);
+      this.valuePhone = document.getElementById("inputPphone");
+      this.phoneNumberPlaceholder = "Only numbers";
+      this.inputPhone.style.border = '1px solid red';
+      this.hire["controls"]["pasngr_phone"].reset();
+    }
+    else {
+      this.inputPhone.style.border = "1px solid #bebdbd";
+    }
   }
 
   checkValidation() {
@@ -249,7 +236,7 @@ export class SecondPage {
       this.inputName.style.border = '1px solid red';
       this.hire["controls"]["pasngr_name"].reset();
     }
-    else if ((this.hire["controls"]["pasngr_phone"].hasError('minlength')) || (this.hire["controls"]["pasngr_phone"].hasError('maxlength'))) {
+    else if ((this.hire["controls"]["pasngr_phone"].hasError('minlength')) || (this.hire["controls"]["pasngr_phone"].hasError('maxlength'))) { 
       this.valuePhone = document.getElementById("inputPphone");
       this.phoneNumberPlaceholder = "Length should be 9 or 10";
       this.inputPhone.style.border = '1px solid red';
@@ -274,42 +261,36 @@ export class SecondPage {
       this.hire["controls"]["destination"].reset();
     }
     else if (this.hire["controls"]["pasngr_name"].hasError('required') || (this.hire["value"]["pasngr_name"].trim() == "")) {
-      //console.log(this.hire["controls"]["pasngr_name"].hasError('required'));
       this.valueName = document.getElementById("inputPname");
       this.namePlaceholder = "Please enter name";
       this.inputName.style.border = '1px solid red';
       this.hire["controls"]["pasngr_name"].reset();
     }
     else if (this.hire["controls"]["pasngr_phone"].hasError('required')) {
-      //console.log(this.hire["controls"]["pasngr_phone"].hasError('required'));
       this.valuePhone = document.getElementById("inputPphone");
       this.phoneNumberPlaceholder = "Please enter phone number";
       this.inputPhone.style.border = '1px solid red';
       this.hire["controls"]["pasngr_phone"].reset();
     }
     else if (this.hire["controls"]["pickup_location"].hasError('required') || (this.hire["value"]["pickup_location"].trim() == "")) {
-      //console.log(this.hire["controls"]["pickup_location"].hasError('required'));
       this.valueLocation = document.getElementById("inputPLocation");
       this.pickupLocationPlaceholder = "Please enter location";
       this.inputLocation.style.border = '1px solid red';
       this.hire["controls"]["pickup_location"].reset();
     }
     else if (this.hire["controls"]["destination"].hasError('required') || (this.hire["value"]["destination"].trim() == "")) {
-      //console.log(this.hire["controls"]["destination"].hasError('required'));
       this.valueDestination = document.getElementById("inputPdestination");
       this.destinationPlaceholder = "Please enter destination";
       this.inputDestination.style.border = '1px solid red';
       this.hire["controls"]["destination"].reset();
     }
     else if (this.hire["controls"]["pickup_date"].hasError('required')) {
-      //console.log(this.hire["controls"]["pickup_date"].hasError('required'));
       this.valueDate = document.getElementById("inputPdate");
       this.dateplaceholder = "please enter date";
       this.inputDate.style.border = '1px solid red';
       this.hire["controls"]["pickup_date"].reset();
     }
     else if (this.hire["controls"]["pickup_time"].hasError('required')) {
-      //console.log(this.hire["controls"]["pickup_time"].hasError('required'));
       this.valueTime = document.getElementById("inputPtime");
       this.timeplaceholder = "please enter time";
       this.inputTime.style.border = '1px solid red';
@@ -337,7 +318,7 @@ export class SecondPage {
         },
           (err) => {
             let message = "Network error! Please check your internet connection.";
-            this.toaster(message);
+            this.toastService.toastCtrlr(message);
           });
       });
     }

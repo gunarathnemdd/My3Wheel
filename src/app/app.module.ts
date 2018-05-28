@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { CallNumber } from '@ionic-native/call-number';
+import { AppVersion } from '@ionic-native/app-version';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -20,6 +21,8 @@ import { ForthPage } from '../pages/forth/forth';
 import { SelectConfirmedHirePage } from '../pages/select-confirmed-hire/select-confirmed-hire';
 import { ViewConfirmedHiresPage } from '../pages/view-confirmed-hires/view-confirmed-hires';
 import { HttpServicesProvider } from '../providers/http-services/http-services';
+import { AlertControllerProvider } from '../providers/alert-controller/alert-controller';
+import { ToastControllerProvider } from '../providers/toast-controller/toast-controller';
 
 @NgModule({
   declarations: [
@@ -56,8 +59,11 @@ import { HttpServicesProvider } from '../providers/http-services/http-services';
     Geolocation,
     BackgroundMode,
     CallNumber,
+    AppVersion,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    HttpServicesProvider
+    HttpServicesProvider,
+    AlertControllerProvider,
+    ToastControllerProvider
   ]
 })
 export class AppModule {}
