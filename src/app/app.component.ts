@@ -5,9 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { Geolocation } from '@ionic-native/geolocation';
 import { BackgroundMode } from '@ionic-native/background-mode';
-import { AppVersion } from '@ionic-native/app-version';
 import { Storage } from '@ionic/storage';
-import compareVersions from "compare-versions";
 
 import { HomePage } from '../pages/home/home';
 import { HttpServicesProvider } from '../providers/http-services/http-services';
@@ -29,7 +27,6 @@ export class MyApp {
     statusBar: StatusBar,
     splashScreen: SplashScreen,
     public toastCtrl: ToastController,
-    private appVersion: AppVersion,
     private storage: Storage,
     private backgroundMode: BackgroundMode,
     public app: App,
@@ -46,6 +43,8 @@ export class MyApp {
 
       this.geolocation.getCurrentPosition();
 
+      console.log('old version');
+
       this.locationAccuracy.canRequest().then((canRequest: boolean) => {
         if (canRequest) {
           // the accuracy option will be ignored by iOS
@@ -54,22 +53,6 @@ export class MyApp {
             error => console.log('Error requesting location permissions', error)
           );
         }
-      });
-
-      this.service.versionCompare("My3Wheel").subscribe(data => {
-        let serverVersion = data['versionNo'];
-        this.appVersion.getVersionNumber().then((myAppVersion) => {
-          if (compareVersions(myAppVersion, serverVersion) == -1) {
-            this.storage.set('version', "old");
-          }
-          else {
-            this.storage.set('version', "latest");
-          }
-        },
-          (err) => {
-            let message = "Network error! Please check your internet connection.";
-            this.toastService.toastCtrlr(message);
-          });
       });
 
       platform.registerBackButtonAction(() => {

@@ -8,6 +8,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 import { orderBy, filter } from 'lodash';
 import moment from 'moment';
 import { BackgroundMode } from '@ionic-native/background-mode';
+import { AppUpdate } from '@ionic-native/app-update';
 
 import { SecondPage } from '../second/second';
 import { ThirdPage } from '../../pages/third/third';
@@ -45,7 +46,6 @@ export class HomePage {
 
 	public globalArray: any[] = [];
 	public showMyHireBtn: boolean;
-	public version: any;
 	public deviceToken: any;
 	public isBackgroundMode: boolean;
 	public isBackgroundModeOn: boolean;
@@ -56,6 +56,7 @@ export class HomePage {
 		public navParams: NavParams,
 		private storage: Storage,
 		private push: Push,
+		private appUpdate: AppUpdate,
 		public alertCtrl: AlertController,
 		public loadingCtrl: LoadingController,
 		public splashScreen: SplashScreen,
@@ -69,11 +70,16 @@ export class HomePage {
 		platform.ready().then(() => {
 			this.initPushNotification();
 		});
+		
+		const updateUrl = 'http://www.my3wheel.lk/xml/updateMy3Wheel.xml';
+		this.appUpdate.checkAppUpdate(updateUrl).then(
+		  (res) => { console.log(res) }, 
+		  (err) => { console.log(err) }
+		);
 
 		this.storage.forEach((value, key, index) => {
 			if (key == "deviceToken") { this.deviceToken = value; }
 			else if (key == "backgroundMode") { this.isBackgroundMode = value; }
-			else if (key == "version") { this.version = value; }
 		})
 	}
 
@@ -223,12 +229,6 @@ export class HomePage {
 				this.showMyHireBtn = false;
 				this.refresherEnabled = true;
 			}
-			else if (this.version == "old") {
-				this.storage.set('isLoaded', "loaded");
-				this.showMyHireBtn = true;
-				this.refresherEnabled = false;
-				this.update();
-			}
 			else if (val == "loaded") {
 				this.getDriverList();
 				this.showMyHireBtn = false;
@@ -243,23 +243,6 @@ export class HomePage {
 				console.log("not loaded");
 			}
 		});
-	}
-
-	update() {
-		let confirmAlert = this.alertCtrl.create({
-			title: "Update!",
-			subTitle: "This app has a new version. Please uninstall this app and visit 'http://www.my3wheel.lk' then install new version.",
-			enableBackdropDismiss: false,
-			buttons: [{
-				text: 'OK',
-				handler: () => {
-					this.getDriverList();
-					this.showMyHireBtn = false;
-					this.refresherEnabled = true;
-				}
-			}]
-		});
-		confirmAlert.present();
 	}
 
 	getDriverList() {
