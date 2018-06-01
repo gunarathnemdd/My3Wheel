@@ -13,10 +13,6 @@ export class HttpServicesProvider {
     console.log('Hello HttpServicesProvider Provider');
   }
 
-  versionCompare(appName) {
-    return this.http.get(this.host3 + '/common_versionCompare.php?appName=' + appName);
-  }
-
   confirmedHire(deviceToken) {
     return this.http.get(this.host + '/my3Wheel_availableHire.php?deviceToken=' + deviceToken);
   }
@@ -38,7 +34,7 @@ export class HttpServicesProvider {
   }
 
   riderReject(hireNo, driverId, state) {
-    return this.http.get(this.host + '/my3Wheel_riderReject.php?hireNo=' + hireNo + '&driverId=' + driverId + '&state=' + state);
+    return this.http.get(this.host3 + '/common_riderReject.php?hireNo=' + hireNo + '&driverId=' + driverId + '&state=' + state);
   }
 
   riderConfirm(hireNo, driverId, hireFee) {
