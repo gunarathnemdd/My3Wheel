@@ -22,6 +22,7 @@
     "@angular/platform-browser": "5.2.9",
     "@angular/platform-browser-dynamic": "5.2.9",
     "@ionic-native/app-update": "^4.7.0",
+    "@ionic-native/app-version": "^4.7.0",
     "@ionic-native/background-mode": "^4.7.0",
     "@ionic-native/call-number": "^4.7.0",
     "@ionic-native/core": "4.6.0",
@@ -37,6 +38,7 @@
     "cordova-android": "7.0.0",
     "cordova-ios": "4.5.4",
     "cordova-plugin-app-update": "^1.6.0",
+    "cordova-plugin-app-version": "^0.1.9",
     "cordova-plugin-appversion": "^1.0.0",
     "cordova-plugin-background-mode": "^0.7.2",
     "cordova-plugin-badge": "^0.8.7",
@@ -83,7 +85,8 @@
       "mx.ferreyra.callnumber": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-statusbar": {},
-      "cordova-plugin-app-update": {}
+      "cordova-plugin-app-update": {},
+      "cordova-plugin-app-version": {}
     },
     "platforms": [
       "android",
