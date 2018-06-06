@@ -236,7 +236,7 @@ export class SecondPage {
       this.inputName.style.border = '1px solid red';
       this.hire["controls"]["pasngr_name"].reset();
     }
-    else if ((this.hire["controls"]["pasngr_phone"].hasError('minlength')) || (this.hire["controls"]["pasngr_phone"].hasError('maxlength'))) { 
+    else if ((this.hire["controls"]["pasngr_phone"].hasError('minlength')) || (this.hire["controls"]["pasngr_phone"].hasError('maxlength'))) {
       this.valuePhone = document.getElementById("inputPphone");
       this.phoneNumberPlaceholder = "Length should be 9 or 10";
       this.inputPhone.style.border = '1px solid red';
@@ -322,10 +322,20 @@ export class SecondPage {
         let deviceToken = val;
         this.service.requestHire(this.hire.value["pasngr_name"].trim(), this.hire.value["pasngr_phone"], this.hire.value["pickup_location"].trim(), this.hire.value["destination"].trim(), this.hire.value["pickup_date"], pTime, this.driverId, deviceToken).subscribe(data => {
           console.log(data["response"]);
-          this.hireNo = data["hireNo"];
-          this.storage.set('backgroundMode', true);
-          this.storage.set('backgroundModeOn', true);
-          this.showAlert();
+          if (data["response"] == 'success') {
+            this.hireNo = data["hireNo"];
+            this.storage.set('backgroundMode', true);
+            this.storage.set('backgroundModeOn', true);
+            this.showAlert();
+          }
+          else if (data["response"] == 'not available') {
+            let message = "Sorry! Driver has deactivated just now. Please try another driver.";
+            this.toastService.toastCtrlr(message);
+          }
+          else {
+            let message = "Server Error! Please try again.";
+            this.toastService.toastCtrlr(message);
+          }
         },
           (err) => {
             let message = "Network error! Please check your internet connection.";
