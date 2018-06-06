@@ -299,11 +299,22 @@ export class SecondPage {
   }
 
   getHire() {
+    let pickupDate = moment(this.hire.value["pickup_date"], "'YYYY-MM-DD'").format('YYYY-MM-DD');
+    let pickupTime = moment(this.hire.value["pickup_time"], "hh:mm").format("hh:mm a");
+    let dateNow = moment().format('YYYY-MM-DD');
+    let timeNow = moment().format("HH:mm");
+    let lastTime = moment(pickupTime, "hh:mm a").format("HH:mm");
     if (this.hire.value["pickup_location"] == this.hire.value["destination"]) {
       this.valueDestination = document.getElementById("inputPdestination");
       this.destinationPlaceholder = "Destination can't be same";
       this.inputDestination.style.border = '1px solid red';
       this.hire["controls"]["destination"].reset();
+    }
+    else if ((dateNow == pickupDate) && (timeNow) > lastTime) {
+      this.valueTime = document.getElementById("inputPtime");
+      this.timeplaceholder = "please enter valid time";
+      this.inputTime.style.border = '1px solid red';
+      this.hire["controls"]["pickup_time"].reset();
     }
     else if (this.hire["valid"]) {
       let pTime = moment(this.hire.value["pickup_time"], "hh:mm").format("hh:mm a");
