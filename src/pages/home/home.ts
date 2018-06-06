@@ -70,11 +70,11 @@ export class HomePage {
 		platform.ready().then(() => {
 			this.initPushNotification();
 		});
-		
+
 		const updateUrl = 'http://www.my3wheel.lk/xml/updateMy3Wheel.xml';
 		this.appUpdate.checkAppUpdate(updateUrl).then(
-		  (res) => { console.log(res) }, 
-		  (err) => { console.log(err) }
+			(res) => { console.log(res) },
+			(err) => { console.log(err) }
 		);
 
 		this.storage.forEach((value, key, index) => {
@@ -251,10 +251,21 @@ export class HomePage {
 		});
 		this.loading.present();
 		this.globalArray = [];
+		this.getDriverDetails();
 		//this.storage.get('deviceToken').then((val) => {
+		// }).catch(err => {
+		// 	console.error();
+		// 	this.globalArray.push({ name: "null" });
+		// 	this.loading.dismiss();
+		// });
+	}
+
+	getDriverDetails() {
 		this.service.unconfirmedHires(this.deviceToken).subscribe(data => {
 			if (data == "no hires") {
+				console.log('no hires');
 				this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((position) => {
+					console.log(position);
 					this.longitude = position['coords']['longitude'];
 					this.latitude = position['coords']['latitude'];
 					this.service.driverDistance(this.longitude, this.latitude).subscribe(location => {
@@ -281,7 +292,11 @@ export class HomePage {
 							this.showMyHireBtn = true;
 							this.refresherEnabled = true;
 						});
-				});
+				},
+					(err) => {
+						console.log(err);
+						this.getDriverDetails();
+					});
 			}
 			else {
 				this.globalArray.push({ name: "activeHire" });
@@ -297,11 +312,6 @@ export class HomePage {
 				this.showMyHireBtn = true;
 				this.refresherEnabled = true;
 			});
-		// }).catch(err => {
-		// 	console.error();
-		// 	this.globalArray.push({ name: "null" });
-		// 	this.loading.dismiss();
-		// });
 	}
 
 	confirmedHire() {

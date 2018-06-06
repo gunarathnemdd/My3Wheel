@@ -43,8 +43,6 @@ export class MyApp {
 
       this.geolocation.getCurrentPosition();
 
-      console.log('old version');
-
       this.locationAccuracy.canRequest().then((canRequest: boolean) => {
         if (canRequest) {
           // the accuracy option will be ignored by iOS
