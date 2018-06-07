@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
+import { NavController, NavParams, App } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import { Storage } from '@ionic/storage';
 
 import { HomePage } from '../home/home';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
 
-@IonicPage()
 @Component({
 	selector: 'page-forth',
 	templateUrl: 'forth.html',

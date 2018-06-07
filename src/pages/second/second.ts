@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, AlertController } from 'ionic-angular';
+import { NavController, NavParams, Platform, AlertController } from 'ionic-angular';
 import moment from 'moment';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Storage } from '@ionic/storage';
@@ -11,7 +11,6 @@ import { ForthPage } from '../../pages/forth/forth';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
 import { ToastControllerProvider } from '../../providers/toast-controller/toast-controller';
 
-@IonicPage()
 @Component({
   selector: 'page-second',
   templateUrl: 'second.html',

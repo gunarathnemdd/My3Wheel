@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, Platform, NavParams } from 'ionic-angular';
+import { NavController, Platform, NavParams } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import { App } from 'ionic-angular';
 import { BackgroundMode } from '@ionic-native/background-mode';
@@ -9,7 +9,6 @@ import { HomePage } from '../home/home';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
 import { ToastControllerProvider } from '../../providers/toast-controller/toast-controller';
 
-@IonicPage()
 @Component({
   selector: 'page-third',
   templateUrl: 'third.html',
