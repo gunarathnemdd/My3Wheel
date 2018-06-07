@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, AlertController } from 'ionic-angular';
+import { NavController, NavParams, Platform, AlertController } from 'ionic-angular';
 import moment from 'moment';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Storage } from '@ionic/storage';
@@ -11,7 +11,6 @@ import { ForthPage } from '../../pages/forth/forth';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
 import { ToastControllerProvider } from '../../providers/toast-controller/toast-controller';
 
-@IonicPage()
 @Component({
   selector: 'page-second',
   templateUrl: 'second.html',
@@ -236,7 +235,7 @@ export class SecondPage {
       this.inputName.style.border = '1px solid red';
       this.hire["controls"]["pasngr_name"].reset();
     }
-    else if ((this.hire["controls"]["pasngr_phone"].hasError('minlength')) || (this.hire["controls"]["pasngr_phone"].hasError('maxlength'))) { 
+    else if ((this.hire["controls"]["pasngr_phone"].hasError('minlength')) || (this.hire["controls"]["pasngr_phone"].hasError('maxlength'))) {
       this.valuePhone = document.getElementById("inputPphone");
       this.phoneNumberPlaceholder = "Length should be 9 or 10";
       this.inputPhone.style.border = '1px solid red';
@@ -299,11 +298,22 @@ export class SecondPage {
   }
 
   getHire() {
+    let pickupDate = moment(this.hire.value["pickup_date"], "'YYYY-MM-DD'").format('YYYY-MM-DD');
+    let pickupTime = moment(this.hire.value["pickup_time"], "hh:mm").format("hh:mm a");
+    let dateNow = moment().format('YYYY-MM-DD');
+    let timeNow = moment().format("HH:mm");
+    let lastTime = moment(pickupTime, "hh:mm a").format("HH:mm");
     if (this.hire.value["pickup_location"] == this.hire.value["destination"]) {
       this.valueDestination = document.getElementById("inputPdestination");
       this.destinationPlaceholder = "Destination can't be same";
       this.inputDestination.style.border = '1px solid red';
       this.hire["controls"]["destination"].reset();
+    }
+    else if ((dateNow == pickupDate) && (timeNow) > lastTime) {
+      this.valueTime = document.getElementById("inputPtime");
+      this.timeplaceholder = "please enter valid time";
+      this.inputTime.style.border = '1px solid red';
+      this.hire["controls"]["pickup_time"].reset();
     }
     else if (this.hire["valid"]) {
       let pTime = moment(this.hire.value["pickup_time"], "hh:mm").format("hh:mm a");
@@ -311,10 +321,20 @@ export class SecondPage {
         let deviceToken = val;
         this.service.requestHire(this.hire.value["pasngr_name"].trim(), this.hire.value["pasngr_phone"], this.hire.value["pickup_location"].trim(), this.hire.value["destination"].trim(), this.hire.value["pickup_date"], pTime, this.driverId, deviceToken).subscribe(data => {
           console.log(data["response"]);
-          this.hireNo = data["hireNo"];
-          this.storage.set('backgroundMode', true);
-          this.storage.set('backgroundModeOn', true);
-          this.showAlert();
+          if (data["response"] == 'success') {
+            this.hireNo = data["hireNo"];
+            this.storage.set('backgroundMode', true);
+            this.storage.set('backgroundModeOn', true);
+            this.showAlert();
+          }
+          else if (data["response"] == 'not available') {
+            let message = "Sorry! Driver has deactivated just now. Please try another driver.";
+            this.toastService.toastCtrlr(message);
+          }
+          else {
+            let message = "Server Error! Please try again.";
+            this.toastService.toastCtrlr(message);
+          }
         },
           (err) => {
             let message = "Network error! Please check your internet connection.";
