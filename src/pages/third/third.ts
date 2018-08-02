@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, Platform, NavParams } from 'ionic-angular';
+import { NavController, Platform, NavParams, ToastController } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import { App } from 'ionic-angular';
 import { BackgroundMode } from '@ionic-native/background-mode';
@@ -34,6 +34,7 @@ export class ThirdPage {
     public app: App,
     public platform: Platform,
     public navParams: NavParams,
+    public toastCtrl: ToastController,
     public toastService: ToastControllerProvider,
     public service: HttpServicesProvider) {
 
@@ -50,16 +51,14 @@ export class ThirdPage {
       if (data['response'] == 'deleted') {
         this.storage.set('backgroundMode', false);
         this.storage.set('backgroundModeOn', false);
-        this.navCtrl.setRoot(HomePage);
         let message = "Hire rejected successfully!";
-        this.toastService.toastCtrlr(message);
+        this.toaster(message);
       }
       else if (data['response'] == 'already deleted') {
         this.storage.set('backgroundMode', false);
         this.storage.set('backgroundModeOn', false);
-        this.navCtrl.setRoot(HomePage);
         let message = "Hire is already deleted due to time out.";
-        this.toastService.toastCtrlr(message);
+        this.toaster(message);
       }
       else {
         let message2 = "Network error! Please check your internet connection.";
@@ -90,9 +89,8 @@ export class ThirdPage {
       else if (data['response'] == 'already deleted') {
         this.storage.set('backgroundMode', false);
         this.storage.set('backgroundModeOn', false);
-        this.navCtrl.setRoot(HomePage);
         let message = "Hire is already deleted due to time out.";
-        this.toastService.toastCtrlr(message);
+        this.toaster(message);
       }
       else {
         let message2 = "Network error! Please check your internet connection.";
@@ -129,5 +127,17 @@ export class ThirdPage {
         let message = "Network error! Please check your internet connection.";
         this.toastService.toastCtrlr(message);
       });
+  }
+
+  toaster(message) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      dismissOnPageChange: true
+    });
+    toast.onDidDismiss(() => {
+      this.navCtrl.setRoot(HomePage);
+    });
+    toast.present();
   }
 }
