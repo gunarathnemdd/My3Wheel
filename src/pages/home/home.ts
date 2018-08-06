@@ -136,37 +136,6 @@ export class HomePage {
 					}
 				}];
 				this.alertService.alertCtrlr(title, message, buttons);
-				// let confirmAlert = this.alertCtrl.create({
-				// 	title: data.title,
-				// 	subTitle: data.message,
-				// 	enableBackdropDismiss: false,
-				// 	buttons: [{
-				// 		text: 'View',
-				// 		handler: () => {
-				// 			//TODO: Your logic here
-				// 			let navTransition = confirmAlert.dismiss();
-				// 			navTransition.then(() => {
-				// 				if (data.title == "Hire Confirmed") {
-				// 					this.navCtrl.push(ThirdPage, {
-				// 						hireNo: data.additionalData['subtitle']
-				// 					});
-				// 				}
-				// 				else if (data.title == "Hire Rejected") {
-				// 					this.navCtrl.push(ForthPage, {
-				// 						hireNo: data.additionalData['subtitle']
-				// 					});
-				// 				}
-				// 				else if (data.title == "View Hire") {
-				// 					console.log("view-confirmed-hires");
-				// 					this.navCtrl.push(ViewConfirmedHiresPage);
-				// 				}
-				// 				console.log('Push notification received');
-				// 			});
-				// 			return true;
-				// 		}
-				// 	}]
-				// });  
-				// confirmAlert.present();
 			} else {
 				//if user NOT using app and push notification comes
 				//TODO: Your logic on click of push notification directly
@@ -252,15 +221,10 @@ export class HomePage {
 		this.loading.present();
 		this.globalArray = [];
 		this.getDriverDetails();
-		//this.storage.get('deviceToken').then((val) => {
-		// }).catch(err => {
-		// 	console.error();
-		// 	this.globalArray.push({ name: "null" });
-		// 	this.loading.dismiss();
-		// });
 	}
 
 	getDriverDetails() {
+		this.storage.set('backgroundMode', false);
 		this.service.unconfirmedHires(this.deviceToken).subscribe(data => {
 			if (data == "no hires") {
 				console.log('no hires');
