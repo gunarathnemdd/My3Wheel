@@ -46,14 +46,16 @@ page-second {
 	}
 
 	.input-label{
-		margin: 7px 8px 5px 0;
+        margin: 7px 8px 5px 0;
+        overflow: visible;
 	}
 
 	.inputFeilds{
 		border: 1px solid rgb(190, 189, 189);
 		padding-left: 5px;
 		font-size: 14px;
-		background-color: white;
+        background-color: white;
+        margin-top: 12px;
 	}
 
 	.text-input-md{
@@ -68,6 +70,7 @@ page-second {
 		margin: 0%;
 		font-size: 14px;
 		height: 25px;
+        margin-top: 12px;
 	}
 
 	.datetime-text{
