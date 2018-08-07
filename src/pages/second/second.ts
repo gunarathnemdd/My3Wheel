@@ -67,12 +67,12 @@ export class SecondPage {
 
   public timeoutId: any;
 
-  public namePlaceholder: any = "Your Name";
-  public phoneNumberPlaceholder: any = "Phone Number";
-  public pickupLocationPlaceholder: any = "Pickup Location";
-  public destinationPlaceholder: any = "Destination";
-  public dateplaceholder: any = "yyyy/mm/dd";
-  public timeplaceholder: any = "hh:mm";
+  public namePlaceholder: any = "";
+  public phoneNumberPlaceholder: any = "";
+  public pickupLocationPlaceholder: any = "";
+  public destinationPlaceholder: any = "";
+  public dateplaceholder: any = "";
+  public timeplaceholder: any = "";
 
   public pushTimeOut: any;
   public timeOut: any;
