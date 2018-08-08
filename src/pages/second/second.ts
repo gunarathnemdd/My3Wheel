@@ -119,7 +119,7 @@ export class SecondPage {
       this.navCtrl.setRoot(HomePage);
       let navTransition = this.alert.dismiss();
       navTransition.then(() => {
-        this.timeOutDelete(60000);
+        this.timeOutDelete(180000);
       });
     });
   }
@@ -165,7 +165,7 @@ export class SecondPage {
             //this.platform.exitApp();
             let navTransition = this.alert.dismiss();
             navTransition.then(() => {
-              this.backGroundService(60000);
+              this.backGroundService(180000);
             });
             return false;
           }
@@ -177,7 +177,7 @@ export class SecondPage {
       this.timeOut = setTimeout(() => {
         let navTransition = this.alert.dismiss();
         navTransition.then(() => {
-          this.backGroundService(57000);
+          this.backGroundService(177000);
         });
         clearTimeout(this.timeOut);
         return false;
