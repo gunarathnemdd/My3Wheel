@@ -6,8 +6,6 @@ import { Storage } from '@ionic/storage';
 import { BackgroundMode } from '@ionic-native/background-mode';
 
 import { HomePage } from '../home/home';
-import { ThirdPage } from '../../pages/third/third';
-import { ForthPage } from '../../pages/forth/forth';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
 import { ToastControllerProvider } from '../../providers/toast-controller/toast-controller';
 
@@ -75,6 +73,7 @@ export class SecondPage {
   public timeplaceholder: any = "";
 
   public pushTimeOut: any;
+  public pushTimeOut2: any;
   public timeOut: any;
   public hireNo: any;
 
@@ -130,6 +129,7 @@ export class SecondPage {
 
   timeOutDelete(time) {
     this.pushTimeOut = setTimeout(() => {
+      this.storage.set('haveActiveHire', false);
       this.service.deleteTimeOutHires(this.hireNo).subscribe(data => {
         console.log(data);
         if (data['responce'] != 'error') {
@@ -150,6 +150,7 @@ export class SecondPage {
     this.backgroundMode.moveToBackground();
     this.backgroundMode.on("activate").subscribe(() => {
       this.timeOutDelete(time);
+      this.disableBackgroundService(900000);
     });
   }
 
@@ -165,6 +166,7 @@ export class SecondPage {
             //this.platform.exitApp();
             let navTransition = this.alert.dismiss();
             navTransition.then(() => {
+              this.storage.set('haveActiveHire', true);
               this.backGroundService(180000);
             });
             return false;
@@ -345,5 +347,12 @@ export class SecondPage {
     else {
       this.checkValidation();
     }
+  }
+
+  disableBackgroundService(time) {
+    this.pushTimeOut2 = setTimeout(() => {
+      clearTimeout(this.pushTimeOut2);
+      this.backgroundMode.disable();
+    }, time);
   }
 }
