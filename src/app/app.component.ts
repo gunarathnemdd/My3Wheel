@@ -21,6 +21,7 @@ export class MyApp {
   public lastBack: any = Date.now();
   public allowClose: boolean = false;
   public translate: any;
+  public haveActiveHire: boolean;
 
   constructor(
     platform: Platform,
@@ -60,27 +61,31 @@ export class MyApp {
         const closeDelay = 2000;
         const spamDelay = 500;
         if (activeView.name === "HomePage") {
-          if (overlay && overlay.dismiss) {
-            overlay.dismiss();
-          } else if (nav.canGoBack()) {
-            nav.pop();
-          } else if (Date.now() - this.lastBack > spamDelay && !this.allowClose) {
-            this.allowClose = true;
-            let toast = this.toastCtrl.create({
-              message: "Press BACK again to exit",
-              duration: closeDelay,
-              dismissOnPageChange: true
-            });
-            toast.onDidDismiss(() => {
-              this.allowClose = false;
-            });
-            toast.present();
-          } else if (Date.now() - this.lastBack < closeDelay && this.allowClose) {
-            //platform.exitApp();
-            this.backgroundMode.enable();
-            this.backgroundMode.moveToBackground();
-          }
-          this.lastBack = Date.now();
+          this.storage.get('haveActiveHire').then((val) => {
+            this.haveActiveHire = val;
+            if (overlay && overlay.dismiss) {
+              overlay.dismiss();
+            } else if (nav.canGoBack()) {
+              nav.pop();
+            } else if (Date.now() - this.lastBack > spamDelay && !this.allowClose) {
+              this.allowClose = true;
+              let toast = this.toastCtrl.create({
+                message: "Press BACK again to exit",
+                duration: closeDelay,
+                dismissOnPageChange: true
+              });
+              toast.onDidDismiss(() => {
+                this.allowClose = false;
+              });
+              toast.present();
+            } else if (Date.now() - this.lastBack < closeDelay && this.allowClose && this.haveActiveHire) {
+              this.backgroundMode.enable();
+              this.backgroundMode.moveToBackground();
+            } else if (Date.now() - this.lastBack < closeDelay && this.allowClose) {
+              platform.exitApp();
+            }
+            this.lastBack = Date.now();
+          });
         }
       });
     });

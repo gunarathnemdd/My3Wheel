@@ -43,6 +43,8 @@ export class ThirdPage {
     this.navParams = navParams;
     this.hireNo = navParams.get('hireNo');
     console.log(this.hireNo);
+    this.backgroundMode.disable();
+    this.storage.set('haveActiveHire', false);
   }
 
   goHome() {
@@ -50,13 +52,11 @@ export class ThirdPage {
       console.log(data);
       if (data['response'] == 'deleted') {
         this.storage.set('backgroundMode', false);
-        this.storage.set('backgroundModeOn', false);
         let message = "Hire rejected successfully!";
         this.toaster(message);
       }
       else if (data['response'] == 'already deleted') {
         this.storage.set('backgroundMode', false);
-        this.storage.set('backgroundModeOn', false);
         let message = "Hire is already deleted due to time out.";
         this.toaster(message);
       }
@@ -76,19 +76,12 @@ export class ThirdPage {
     this.service.riderConfirm(this.hireNo, this.driverId, this.hireFee).subscribe(data => {
       console.log(data);
       if (data['response'] == 'confirmed') {
-        //document.getElementById("exitNote").innerHTML = "Have a safe journey";
-        //this.platform.exitApp();
-        this.storage.set('backgroundMode', false);
-        this.storage.set('backgroundModeOn', false);
-        this.backgroundMode.enable();
-        this.backgroundMode.on("activate").subscribe(() => {
-          this.navCtrl.setRoot(HomePage);
+        this.storage.set('backgroundMode', false).then(() => {
+          this.platform.exitApp();
         });
-        this.backgroundMode.moveToBackground();
       }
       else if (data['response'] == 'already deleted') {
         this.storage.set('backgroundMode', false);
-        this.storage.set('backgroundModeOn', false);
         let message = "Hire is already deleted due to time out.";
         this.toaster(message);
       }
@@ -117,16 +110,6 @@ export class ThirdPage {
       this.driverId = data["driverID"];
       this.mobile_nu = data["tpNumber"];
     });
-  }
-
-  deleteHire(hireNo, driverId) {
-    this.service.rejectHire(hireNo, driverId, 'delete').subscribe(data => {
-      console.log(data);
-    },
-      (err) => {
-        let message = "Network error! Please check your internet connection.";
-        this.toastService.toastCtrlr(message);
-      });
   }
 
   toaster(message) {

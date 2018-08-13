@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, App } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import { Storage } from '@ionic/storage';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 import { HomePage } from '../home/home';
 import { HttpServicesProvider } from '../../providers/http-services/http-services';
@@ -22,6 +23,7 @@ export class ForthPage {
 
 	constructor(
 		private storage: Storage,
+		private backgroundMode: BackgroundMode,
 		public navCtrl: NavController,
 		public app: App,
 		public navParams: NavParams,
@@ -29,11 +31,12 @@ export class ForthPage {
 
 		this.navParams = navParams
 		this.hireNo = navParams.get('hireNo');
+		this.backgroundMode.disable();
+		this.storage.set('haveActiveHire', false);
 	}
 
 	goHome() {
-        this.storage.set('backgroundMode', false);
-		this.storage.set('backgroundModeOn', false);
+		this.storage.set('backgroundMode', false);
 		this.navCtrl.setRoot(HomePage);
 	}
 
