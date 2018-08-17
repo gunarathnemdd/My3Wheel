@@ -33,10 +33,10 @@ export class ForthPage {
 		this.hireNo = navParams.get('hireNo');
 		this.backgroundMode.disable();
 		this.storage.set('haveActiveHire', false);
+		this.storage.set('backgroundMode', false);
 	}
 
 	goHome() {
-		this.storage.set('backgroundMode', false);
 		this.navCtrl.setRoot(HomePage);
 	}
 
