@@ -12,6 +12,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { CallNumber } from '@ionic-native/call-number';
 import { AppUpdate } from '@ionic-native/app-update';
+import { Device } from '@ionic-native/device';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -60,6 +61,7 @@ import { ToastControllerProvider } from '../providers/toast-controller/toast-con
     BackgroundMode,
     CallNumber,
     AppUpdate,
+    Device,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     HttpServicesProvider,
     AlertControllerProvider,

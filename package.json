@@ -25,6 +25,7 @@
     "@ionic-native/background-mode": "^4.7.0",
     "@ionic-native/call-number": "^4.7.0",
     "@ionic-native/core": "4.6.0",
+    "@ionic-native/device": "^4.15.0",
     "@ionic-native/geolocation": "^4.7.0",
     "@ionic-native/local-notifications": "^4.7.0",
     "@ionic-native/location-accuracy": "^4.7.0",
